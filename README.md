@@ -7,14 +7,15 @@ Split-merge treap is only acceptable bbst.
 Recursive > iterative segtrees
 
 
-## Done:
+
+#### Done
 
 Lazy seg
 
 Sparse seg of BBSTs
 
 
-## Not done:
+#### Not done
 
 Sparse seg
 

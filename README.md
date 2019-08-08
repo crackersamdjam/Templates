@@ -1,4 +1,4 @@
-## Preamble
+# Preamble
 
 Repo of algorithmic and data structural templates. Clean and easy to implement.
 
@@ -8,17 +8,16 @@ Recursive > iterative segtrees
 
 
 
-### Done
-
-Lazy seg
-
-Sparse seg of BBSTs
-
-
-### Not done
+## Coming soon
 
 Sparse seg
 
 BBSTs
 
 bit of sparse segs
+
+Dynammic sqrt-decomp
+
+Convex hull templates
+
+Every variation of Tarjan's

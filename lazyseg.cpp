@@ -9,7 +9,7 @@ template<typename First, typename ... Ints> void print(First arg, Ints... rest){
 
 using namespace std;
 typedef long long ll;
-const int MM = 4e5+1, MN = 1e5+1;
+const int MM = 4e5+1;
 
 #define lc (rt<<1)
 #define rc (rt<<1|1)

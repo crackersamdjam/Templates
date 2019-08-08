@@ -1,10 +1,8 @@
-Done:
+## Done:
 
 Lazy seg
 
-
-
-Not done:
+## Not done:
 
 Sparse seg
 BBSTs

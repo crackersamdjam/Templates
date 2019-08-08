@@ -99,4 +99,6 @@ ll index(tnode *cur, int k){
  * namespace --> struct functions
  * remove function
  * order statistics
+ * https://dmoj.ca/src/1540866
+ * https://cp-algorithms.com/data_structures/treap.html
  */

@@ -1,13 +1,6 @@
 // IOI '13 P6 - Game
 
 #include <bits/stdc++.h>
-#define gc getchar_unlocked()
-#define pc(x) putchar_unlocked(x)
-template<typename T> void scan(T &x){x = 0;register bool _=0;register T c=gc;_=c==45;c=_?gc:c;while(c<48||c>57)c=gc;for(;c<48||c>57;c=gc);for(;c>47&&c<58;c=gc)x=(x<<3)+(x<<1)+(c&15);x=_?-x:x;}
-template<typename T> void printn(T n){register bool _=0;_=n<0;n=_?-n:n;char snum[65];int i=0;do{snum[i++]=n%10+48;n/= 10;}while(n);--i;if (_)pc(45);while(i>=0)pc(snum[i--]);}
-template<typename First, typename ... Ints> void scan(First &arg, Ints&... rest){scan(arg);scan(rest...);}
-template<typename T> void print(T n){printn(n);pc(10);}
-template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
 
 typedef long long ll;
 
@@ -137,7 +130,7 @@ struct node{
         return std::__gcd(l? l->query(nl, nm, lx, rx, ly, ry) : 0, r? r->query(nm+1, nr, lx, rx, ly, ry) : 0);
     }
     
-} segrt;
+} rt;
 
 int n, m;
 
@@ -146,9 +139,9 @@ void init(int r, int c){
 }
 
 void update(int i, int j, ll k){
-    segrt.update(0, n-1, i, j, k);
+    rt.update(0, n-1, i, j, k);
 }
 
 ll calculate(int lx, int ly, int rx, int ry){
-    return segrt.query(0, n-1, lx, rx, ly, ry);
+    return rt.query(0, n-1, lx, rx, ly, ry);
 }

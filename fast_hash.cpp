@@ -11,6 +11,8 @@ using namespace std;
 typedef long long ll;
 const int MM = 1e6+1;
 ll base = 131, mod = 1685518853;
+// 31, 1e9+9
+// 131, 1494318097
 
 int n;
 string s, t;

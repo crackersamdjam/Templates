@@ -1,9 +1,0 @@
-CMakeLists.txt
-main.cpp
-cmake-build-debug/
-.*
-!.gitignore
-!.gitattributes
-man.md
-
-

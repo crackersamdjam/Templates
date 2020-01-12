@@ -1,1 +1,0 @@
-/usr/bin/c++.exe -g  -Wl,--enable-auto-import CMakeFiles/templates.dir/geo.cpp.o  -o templates.exe -Wl,--out-implib,libtemplates.dll.a -Wl,--major-image-version,0,--minor-image-version,0 

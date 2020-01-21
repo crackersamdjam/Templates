@@ -9,11 +9,7 @@ template<typename First, typename ... Ints> void print(First arg, Ints... rest){
 
 using namespace std;
 using T = long long;
-const int MM = 4e5+2;
-
-#define lc (rt<<1)
-#define rc (rt<<1|1)
-#define nm ((nl+nr)>>1)
+const int MM = 4e5+5;
 
 struct node{
     T val, lp;
@@ -26,8 +22,10 @@ struct node{
 };
 
 struct segtree{
-    
-    node tree[MM*3];
+#define lc (rt<<1)
+#define rc (rt<<1|1)
+#define nm ((nl+nr)>>1)
+    node tree[MM*4];
     T DEF = 0;
     //default value
     
@@ -50,7 +48,7 @@ struct segtree{
         tree[rt].up = 0;
     }
     
-    void build(int l = 1, int r = MM-1, int rt = 1){
+    void build(int l = 0, int r = MM-1, int rt = 1){
         int nl = l, nr = r;
         if(l == r){
             tree[rt].val = DEF;
@@ -63,7 +61,7 @@ struct segtree{
         push_up(rt);
     }
     
-    void update(int l, int r, T val, int nl = 1, int nr = MM-1, int rt = 1){
+    void update(int l, int r, T val, int nl = 0, int nr = MM-1, int rt = 1){
         if(r < nl || l > nr)
             return;
         if(l <= nl && r >= nr){
@@ -76,7 +74,7 @@ struct segtree{
         push_up(rt);
     }
     
-    T query(int l, int r, int nl = 1, int nr = MM-1, int rt = 1){
+    T query(int l, int r, int nl = 0, int nr = MM-1, int rt = 1){
         if(r < nl || l > nr)
             return DEF;
         if(l <= nl && r >= nr)
@@ -84,6 +82,9 @@ struct segtree{
         push_down(rt, nl, nr);
         return merge(query(l, r, nl, nm, lc), query(l, r, nm+1, nr, rc));
     }
+#undef lc
+#undef rc
+#undef nm
 } t;
 
 int main(){

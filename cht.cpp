@@ -55,5 +55,4 @@ a[j] - a[k] always positive
 
  wait I messed up switch every <= to >= (the comment lines above)
  
- 
  */

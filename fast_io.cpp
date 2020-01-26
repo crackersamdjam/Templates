@@ -5,3 +5,4 @@ template<typename T> void printn(T n){register bool _=0;_=n<0;n=_?-n:n;char snum
 template<typename First, typename ... Ints> void scan(First &arg, Ints&... rest){scan(arg);scan(rest...);}
 template<typename T> void print(T n){printn(n);pc(10);}
 template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
+

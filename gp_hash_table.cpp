@@ -16,3 +16,4 @@ struct chash {
 };
 
 gp_hash_table<int, int, chash> mp;
+

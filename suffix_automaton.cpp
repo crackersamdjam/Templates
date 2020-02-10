@@ -12,7 +12,7 @@ struct st{
 const int MM = 100002;
 st a[MM*2];
 int sz, last;
-ll cnt[MM];
+ll cnt[MM*2];
 
 void init(){
     a[0].len = 0;

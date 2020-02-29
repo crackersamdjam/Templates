@@ -17,3 +17,9 @@ struct chash {
 
 gp_hash_table<int, int, chash> mp;
 
+
+
+//#include <ext/pb_ds/assoc_container.hpp>
+__gnu_pbds::gp_hash_table<ll, __gnu_pbds::null_type> mp;
+// acts like a set
+// mp.find(x) != mp.end() to check

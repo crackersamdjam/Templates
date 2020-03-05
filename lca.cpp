@@ -8,28 +8,28 @@ template<typename T> void print(T n){printn(n);pc(10);}
 template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
 
 using namespace std;
-const int MM = 1e5+1, MN = 25;
+const int MM = 1e5+1, LOG = 20;
 
-int n, dep[MM], lca[MN][MM], val[MN][MM];
+int n, dep[MM], sp[LOG][MM], val[LOG][MM];
 
 int getlca(int u, int v){
     if(dep[u] < dep[v])
         swap(u, v);
     //u gets jumped up
-    for(int i = MN-1; i >= 0; i--){
-        if((lca[i][u] != -1) && (dep[lca[i][u]] >= dep[v]))
-            u = lca[i][u];
+    for(int i = LOG-1; i >= 0; i--){
+        if(~sp[i][u] && (dep[sp[i][u]] >= dep[v]))
+            u = sp[i][u];
     }
     //now should be on same level
     if(u == v)
         return u;
-    for(int i = MN-1; i >= 0; i--){
-        if((lca[i][u] != -1) && (lca[i][v] != -1) && (lca[i][u] != lca[i][v])){
-            u = lca[i][u];
-            v = lca[i][v];
+    for(int i = LOG-1; i >= 0; i--){
+        if(~sp[i][u] && ~sp[i][v] && (sp[i][u] != sp[i][v])){
+            u = sp[i][u];
+            v = sp[i][v];
         }
     }
-    return lca[0][u];
+    return sp[0][u];
     //return direct parent
 }
 
@@ -39,17 +39,17 @@ int query(int a, int b){
     
     int lcan = getlca(a, b), ret = 0;
     
-    for(int i = MN-1; i >= 0; i--){
+    for(int i = LOG-1; i >= 0; i--){
         if(dep[a] >= dep[lcan] + (1<<i)){
             ret = max(ret, val[i][a]);
-            a = lca[i][a];
+            a = sp[i][a];
         }
     }
     
-    for(int i = MN-1; i >= 0; i--){
+    for(int i = LOG-1; i >= 0; i--){
         if(dep[b] >= dep[lcan] + (1<<i)){
             ret = max(ret, val[i][b]);
-            b = lca[i][b];
+            b = sp[i][b];
         }
     }
     return ret;
@@ -57,15 +57,15 @@ int query(int a, int b){
 
 int main(){
     
-    memset(lca, -1, sizeof lca);
+    memset(sp, -1, sizeof sp);
     
     //dfs
     
-    for(int i = 1; i < MN; i++){
+    for(int i = 1; i < LOG; i++){
         for(int j = 0; j <= n; j++){
-            if(~lca[i-1][j]){
-                lca[i][j] = lca[i-1][ lca[i-1][j] ];
-                val[i][j] = max(val[i-1][j], val[i-1][ lca[i-1][j] ]);
+            if(~sp[i-1][j]){
+                sp[i][j] = sp[i-1][ sp[i-1][j] ];
+                val[i][j] = max(val[i-1][j], val[i-1][ sp[i-1][j] ]);
             }
         }
     }

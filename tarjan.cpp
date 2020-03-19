@@ -23,7 +23,8 @@ struct sccbcc{
         dfn[cur] = low[cur] = ++t;
         
         for(int u: adj[cur]){
-            if(u == pre)
+            if(u == pre) //only for bidirectional? need fix
+                
                 continue;
             if(!dfn[u]){
                 dfs(u, cur);

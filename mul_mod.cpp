@@ -25,11 +25,27 @@ ll mulmod(ll a, ll b, ll mod){
     return res % mod;
 }
 
+//only works with this mod
+constexpr ll mod61 = (1ull<<61) - 1;
+ll modmul(ll a, ll b){
+    a %= mod61, b %= mod61;
+    ll l1 = (int)a, h1 = a>>32, l2 = (int)b, h2 = b>>32;
+    ll l = l1*l2, m = l1*h2 + l2*h1, h = h1*h2;
+    ll ret = (l&mod61) + (l>>61) + (h << 3) + (m >> 29) + (m << 35 >> 3) + 1;
+    ret = (ret & mod61) + (ret>>61);
+    ret = (ret & mod61) + (ret>>61);
+    return ret-1;
+}
+
 int main(){
     ll a, b, m;
-    cin>>a>>b>>m;
+    //cin>>a>>b>>m;
+    a = 9223372036854775807;
+    b = 9223372036854775807;
+    //m = 100000000000;
+    m = (1LL<<61)-1;
     __int128 c = a, d = b;
-    print(mulmod(a, b, m), a*b%m, c*d%m);
+    print(mulmod(a, b, m), modmul(a, b), a*b%m, c*d%m);
     
     
     return 0;

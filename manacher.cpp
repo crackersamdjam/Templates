@@ -35,6 +35,10 @@ int main(){
             r[i] = 1;
         else
             r[i] = min(mx-i, r[p*2-i]);
+        
+        //p*2 = leftend + rightend
+        //leftend + rightend-i reflects i across p
+        
         while(s[i-r[i]] == s[i+r[i]])
             r[i]++;
         if(i + r[i] > mx)

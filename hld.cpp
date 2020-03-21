@@ -81,14 +81,14 @@ struct segtree{
 
 int n, m;
 vector<int> adj[MM];
-int par[MM], depth[MM], heavy[MM], head[MM], pos[MM], ptr;
+int par[MM], dep[MM], heavy[MM], head[MM], pos[MM], ptr;
 
 int dfs(int cur, int pre){
     int size = 1, maxsz = 0;
     for(int u : adj[cur]){
         if(u == pre)
             continue;
-        par[u] = cur, depth[u] = depth[cur]+1;
+        par[u] = cur, dep[u] = dep[cur]+1;
         int szu = dfs(u, cur);
         size += szu;
         if(szu > maxsz)
@@ -110,7 +110,9 @@ void decompose(int cur, int id){
 void init(){
     memset(heavy, -1, sizeof heavy);
     ptr = 0;
-    dfs(1, -1);
+    adj[0].push_back(1);
+    adj[1].push_back(0);
+    dfs(0, -1);
     decompose(1, 1);
     t.build();
 }
@@ -118,32 +120,31 @@ void init(){
 int query(int a, int b){
     int res = 0;
     for(; head[a] != head[b]; b = par[head[b]]){
-        if(depth[head[a]] > depth[head[b]])
+        if(dep[head[a]] > dep[head[b]])
             swap(a, b);
         res += t.query(pos[head[b]], pos[b]);
     }
     if(a != b){
-        if(depth[a] > depth[b])
+        if(dep[a] > dep[b])
             swap(a, b);
         res += t.query(pos[a]+1, pos[b]);
     }
     return res;
 }
 
-void update(int a, int b){
+void update(int a, int b, int v = 1){
     for(; head[a] != head[b]; b = par[head[b]]){
-        if(depth[head[a]] > depth[head[b]])
+        if(dep[head[a]] > dep[head[b]])
             swap(a, b);
         int l = pos[head[b]], r = pos[b];
-        t.update(l, r, 1);
+        t.update(l, r, v);
     }
     if(a != b){
-        if(depth[a] > depth[b])
+        if(dep[a] > dep[b])
             swap(a, b);
-        t.update(pos[a]+1, pos[b], 1);
+        t.update(pos[a]+1, pos[b], v);
     }
 }
-
 
 int main(){
     ios_base::sync_with_stdio(0);

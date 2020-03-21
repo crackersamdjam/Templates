@@ -78,5 +78,6 @@ int main(){
     return 0;
 }
 /*
+ * unfinished
  * before recurse, make previous alphabet and what it's hash will be
  */

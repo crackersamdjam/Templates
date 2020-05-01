@@ -103,7 +103,6 @@ struct Splay{
         if(!x) return;
         inorder(T[x].ch[0]);
         printf("%d ", T[x].val);
-//        printerr("inord", x, T[x].val, T[x].sz, "p", T[x].p, T[x].ch[0], T[x].ch[1]);
         inorder(T[x].ch[1]);
     }
     

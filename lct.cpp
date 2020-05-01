@@ -1,53 +1,91 @@
-#include <bits/stdc++.h>
+//old sub test time
 
+#include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
+const int MM = 1e5+5;
 
 struct LinkCut {
-    struct Node {
-        int p = 0, ch[2] = {0, 0}, pp = 0;
-        bool flip = 0;
-        int val = 0, dp = 0;
+    struct node{
+        int p = 0, ch[2] = {0, 0}, pp = 0, sz = 0;
+        bool flip = 0, fix = 0;
+        ll val = 0, lp = 0, fixv = 0, max = INT_MIN, min = INT_MAX;
+        ll sum = 0;
     };
-    vector<Node> node;
+    vector<node> T;
+    int ptr;
     
-    LinkCut(int n) : node(n + 1) {}
+    LinkCut(int n): T(n+1){ }
+    
+    int newnode(int v){
+        ptr++;
+        T[ptr].val = v;
+        T[ptr].sz = 1;
+        return ptr;
+    }
     
     // SPLAY TREE OPERATIONS START
     
     int dir(int x, int y){ //which ch[?] y is of x
-        return node[x].ch[1] == y;
+        return T[x].ch[1] == y;
     }
     
     void set(int x, int d, int y){ //set x's ch[d] to y and y's par to x
-        if (x) node[x].ch[d] = y, pull(x);
-        if (y) node[y].p = x;
+        if(x) T[x].ch[d] = y, pull(x);
+        if(y) T[y].p = x;
     }
     
-    void pull(int x){ //aka push up
+    void pull(int x){
         if(!x) return;
-        int &l = node[x].ch[0], &r = node[x].ch[1];
-        node[x].dp = max({node[x].val, node[l].dp, node[r].dp});
+        int l = T[x].ch[0], r = T[x].ch[1];
+        push(l), push(r);
+        T[x].sum = T[l].sum + T[r].sum + T[x].val;
+        T[x].max = max({T[x].val, T[l].max, T[r].max});
+        T[x].min = min({T[x].val, T[l].min, T[r].min});
+        T[x].sz = T[l].sz + T[r].sz + 1;
     }
     
-    void push(int x){ //push down
-        if(!x || !node[x].flip)
-            return;
-        int &l = node[x].ch[0], &r = node[x].ch[1];
-        swap(l, r); node[l].flip ^= 1; node[r].flip ^= 1;
-        node[x].flip = 0;
+    void push(int x){
+        if(!x) return;
+        int &l = T[x].ch[0], &r = T[x].ch[1];
+        
+        if(T[x].flip){
+            swap(l, r);
+            T[l].flip ^= 1; T[r].flip ^= 1;
+            T[x].flip = 0;
+        }
+        
+        if(T[x].fix){
+            ll v = T[x].fixv + T[x].lp;
+            T[x].val = T[x].max = T[x].min = v;
+            T[x].sum = (ll)v*T[x].sz;
+            
+            T[l].fixv = T[r].fixv = v;
+            T[l].fix = T[r].fix = 1;
+            T[l].lp = T[r].lp = 0;
+            
+            T[x].fix = 0;
+            T[x].fixv = T[x].lp = 0;
+        }
+        else{
+            auto &lp = T[x].lp;
+            T[x].val += lp, T[x].max += lp, T[x].min += lp, T[x].sum += (ll)lp*T[x].sz;
+            T[l].lp += lp, T[r].lp += lp;
+            lp = 0;
+        }
     }
     
     void rotate(int x, int d){ // 0 left, 1 right
-        int y = node[x].p, z = node[y].p, w = node[x].ch[d];
-        swap(node[x].pp, node[y].pp);
+        int y = T[x].p, z = T[y].p, w = T[x].ch[d];
+        swap(T[x].pp, T[y].pp);
         set(y, !d, w);
         set(x, d, y);
         set(z, dir(z, y), x);
     }
     
     void splay(int x){
-        for(push(x); node[x].p;){
-            int y = node[x].p, z = node[y].p;
+        for(push(x); T[x].p;){
+            int y = T[x].p, z = T[y].p;
             push(z); push(y); push(x);
             int dx = dir(y, x), dy = dir(z, y);
             if(!z)
@@ -61,153 +99,157 @@ struct LinkCut {
     
     // SPLAY TREE OPERATIONS END
     
-    void MakeRoot(int u) {
-        Access(u);
-        int l = node[u].ch[0];
-        node[l].flip ^= 1;
-        swap(node[l].p, node[l].pp);
+    void makeroot(int u){
+        access(u);
+        int l = T[u].ch[0];
+        T[l].flip ^= 1;
+        swap(T[l].p, T[l].pp);
         set(u, 0, 0);
     }
     
-    void Access(int _u) {
-        for (int v = 0, u = _u; u; u = node[v = u].pp) {
+    int access(int _u){
+        int v, u;
+        for(v = 0, u = _u; u; u = T[v = u].pp){ // jump both up (u is pp of v)
             splay(u); splay(v);
-            int r = node[u].ch[1];
-            node[v].pp = 0;
-            swap(node[r].p, node[r].pp);
+            //remove u's prefered child (r), change to v if it exists
+            int r = T[u].ch[1];
+            T[v].pp = 0;
+            swap(T[r].p, T[r].pp);
             set(u, 1, v);
         }
         splay(_u);
+        return v; // last node that pp jumped to (for lca)
     }
     
-    void Link(int u, int v) {
-        assert(!Connected(u, v));
-        MakeRoot(v);
-        node[v].pp = u;
+    void link(int u, int v){ // make v's parent u
+        if(connected(u, v))
+            return;
+        makeroot(v);
+        T[v].pp = u;
     }
     
-    void Cut(int u, int v) {
-        MakeRoot(u); Access(u); splay(v);
-        assert(node[v].pp == u);
-        node[v].pp = 0;
+    void cut(int u, int v){
+        makeroot(u); access(u); splay(v);
+        assert(T[v].pp == u);
+        T[v].pp = 0;
     }
     
-    bool Connected(int u, int v) {
-        if (u == v) return true;
-        MakeRoot(u); Access(v); splay(u);
-        return node[v].p == u || node[node[v].p].p == u;
+    bool connected(int u, int v){
+        if(u == v) return 1;
+        makeroot(u); access(v); splay(u);
+        return T[v].p == u || T[T[v].p].p == u;
     }
     
-    int GetPath(int u, int v) {
-        MakeRoot(u); Access(v); return v;
+    node query(int u, int v){
+        makeroot(u); access(v);
+        //now v is at top of ALL and only nodes in the splay are on path root(u) -> v
+        //so it becomes subtree sum
+        return T[v];
+    }
+    
+    void update(int v, int w, bool op, ll x){
+        makeroot(w), access(v);
+        if(op == 0){
+            T[v].lp += x;
+        }
+        else{
+            T[v].lp = 0;
+            T[v].fix = 1;
+            T[v].fixv = x;
+        }
+    }
+    
+    int findroot(int u){
+        access(u);
+        while(T[u].ch[0])
+            u = T[u].ch[0];
+        splay(u);
+        return u;
+    }
+    
+    int lca(int v, int w){
+        access(v);
+        return access(w);
+        //v already on preferred path
+        //returning last time w had to jump to join preferred path (with v)
+    }
+    
+    void wtf(int x, int y){
+        //change x's par to y, unless y is in x's subtree
+        if(lca(x, y) == x) return;
+        access(x);
+        cut(x, T[x].ch[0]);
+        link(x, y);
     }
 };
 
-void Test() {
-    int N = 100, Q = 100, V = 1000;
-    while (true) {
-        int n = rand() % N + 1;
-        int q = rand() % Q + 1;
-        int p1 = rand() % 100, p2 = rand() % 100, p3 = rand() % 100, p4 = rand() % 100, p5 = rand() % 100;
-        
-        vector<pair<int, int>> edges;
-        LinkCut lc(n);
-        
-        auto conn = [&](int a, int b) {
-            vector<int> dp(n + 1, -1);
-            dp[a] = lc.node[a].val;
-            for (int ch = 1; ch >= 0; ch--) {
-                for (auto p : edges) {
-                    for (int it = 0; it < 2; ++it) {
-                        if (dp[p.first] != -1 && dp[p.second] == -1) {
-                            dp[p.second] = max(dp[p.first], lc.node[p.second].val);
-                            ch = 1;
-                        }
-                        swap(p.first, p.second);
-                    }
-                }
-            }
-            return dp[b];
-        };
-        
-        
-        auto sim_op = [&]() {
-            while (true) {
-                int t = rand() % (p1 + p2 + p3 + p4 + p5);
-                
-                if (t < p1) {
-                    int a = rand() % n + 1, b = rand() % n + 1;
-                    if (conn(a, b) == -1) {
-                        edges.emplace_back(a, b);
-                        lc.Link(a, b);
-                        return;
-                    }
-                    continue;
-                }
-                
-                t -= p1;
-                
-                if (t < p2) {
-                    if (edges.empty()) continue;
-                    int pos = rand() % edges.size();
-                    swap(edges[pos], edges.back());
-                    // cerr << "CUT: " << edges.back().first << " " << edges.back().second << endl;
-                    lc.Cut(edges.back().first, edges.back().second);
-                    edges.pop_back();
-                    return;
-                }
-                
-                t -= p2;
-                
-                if (t < p3) {
-                    int node = rand() % n + 1;
-                    lc.Access(node);
-                    lc.node[node].val = rand() % V + 1;
-                    lc.pull(node);
-                    // cerr << "UPDATE: " << node << endl;
-                    return;
-                }
-                
-                t -= p3;
-                
-                if (t < p4) {
-                    int a = rand() % n + 1, b = rand() % n + 1;
-                    int expected = conn(a, b);
-                    if (expected != -1) {
-                        // cerr << "QUERY: " << a << " " << b << endl;
-                        int ch = lc.GetPath(a, b);
-                        int actual = lc.node[ch].dp;
-                        assert(expected == actual);
-                        return;
-                    }
-                    continue;
-                }
-                
-                t -= p4;
-                
-                if (t < p5) {
-                    int a = rand() % n + 1, b = rand() % n + 1;
-                    // cerr << "CONNECTED: " << a << " " << b << endl;
-                    int expected = (conn(a, b) != -1);
-                    // cerr << "EXP: " << expected << endl;
-                    int actual = lc.Connected(a, b);
-                    assert(expected == actual);
-                    return;
-                }
-                
-                assert(false);
-            }
-        };
-        
-        for (int i = 0; i < q; ++i) {
-            sim_op();
-        }
-        
-        cerr << "OK N = " << n << " Q = " << q << endl;
-    }
+int n, m;
+ll a[MM];
+
+void print(ll v){
+    cout<<v<<'\n';
 }
 
-int main() {
-    Test();
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    cin>>n>>m;
+    LinkCut LCT(n+m+5);
+    for(int i = 1; i <= n; i++){
+        cin>>a[i];
+        LCT.update(i, i, 1, a[i]);
+    }
+    for(int i = 0,x,y; i < n-1; i++){
+        cin>>x>>y;
+        LCT.link(x, y);
+    }
+    int root;
+    cin>>root;
+    
+    ll z;
+    for(int i = 0,op,x,y; i < m; i++){
+        LCT.makeroot(root);
+        cin>>op>>x;
+        if(op == 0){
+            root = x;
+        }
+        if(op == 1){
+            cin>>y>>z;
+            LCT.update(x, y, 1, z);
+        }
+        if(op == 2){
+            cin>>y>>z;
+            LCT.update(x, y, 0, z);
+        }
+        if(op == 3){
+            cin>>y;
+            print(LCT.query(x, y).min);
+        }
+        if(op == 4){
+            cin>>y;
+            print(LCT.query(x, y).max);
+        }
+        if(op == 5){
+            cin>>y;
+            print(LCT.query(x, y).sum);
+        }
+        if(op == 6){
+            cin>>y;
+            LCT.wtf(x, y);
+        }
+        if(op == 7){
+            cin>>y;
+            print(LCT.lca(x, y));
+        }
+    }
+    
     return 0;
 }
+
+/*
+ notes:
+ only push during splay x, x->p, x->p->p or right before pull
+ only pull in "set" function
+ 
+ */

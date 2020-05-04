@@ -1,5 +1,3 @@
-//old sub test time
-
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;

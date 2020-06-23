@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#define all(x) (x).begin(), (x).end()
 #define gc getchar_unlocked()
 #define pc(x) putchar_unlocked(x)
 template<typename T> void scan(T &x){x = 0;bool _=0;T c=gc;_=c==45;c=_?gc:c;while(c<48||c>57)c=gc;for(;c<48||c>57;c=gc);for(;c>47&&c<58;c=gc)x=(x<<3)+(x<<1)+(c&15);x=_?-x:x;}
@@ -16,7 +17,7 @@ int randint(int a, int b){return uniform_int_distribution<int>(a, b)(g1);}
 int n;
 vector<int> adj[MM];
 
-// generates a random tree with n vertices
+// generates a random tree with n vertices (Prufer Sequence)
 vector<pair<int, int>> init(){
     vector<int> code(n-2);
     for(int &i: code)

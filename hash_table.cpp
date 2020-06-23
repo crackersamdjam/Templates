@@ -38,7 +38,7 @@ struct hashmap{
 		cur = x%M; nxt[sz] = to[cur]; to[cur] = sz; val[sz] = v; key[sz] = x;
 		return val[sz++];
 	}
-};
+} test;
 
 mt19937_64 g(0);
 ll randl(ll a,ll b){return uniform_int_distribution<ll>(a, b)(g);}
@@ -66,6 +66,7 @@ int main(){
 		END = chrono::system_clock::now();
 		tot = END-START;
 		cout<<"hashmap "<<tot.count()<<endl;
+		delete mp;
 		
 		START = chrono::system_clock::now();
 		__gnu_pbds::gp_hash_table<ll, pii> mp2;
@@ -86,5 +87,11 @@ int main(){
 		cout<<"unordered_map "<<tot.count()<<endl;
 		
 		//hashmap is 2.5 times faster than gp_hash_table, which is in turn 2.5 times faster than unordered_map
+	}
+	
+	test.update(1, {2, 3});
+	test.update(2, {4, 5});
+	for(int i = 0; i < test.sz; i++){ //iterate through hash table
+		print(i, test.key[i], test.val[i].first, test.val[i].second);
 	}
 }

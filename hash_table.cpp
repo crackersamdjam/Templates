@@ -86,7 +86,7 @@ int main(){
 		tot = END-START;
 		cout<<"unordered_map "<<tot.count()<<endl;
 		
-		//hashmap is 2.5 times faster than gp_hash_table, which is in turn 2.5 times faster than unordered_map
+		//hashmap is 1.5 times faster than gp_hash_table (O2), which is in turn 2.5 times faster than unordered_map
 	}
 	
 	test.update(1, {2, 3});

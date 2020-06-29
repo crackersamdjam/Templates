@@ -9,7 +9,8 @@ elif [ $1 = "cf" ]; then
 	for ((i=0; i<$3; i++))
 	do
 	  echo "cf$2${chars[i]}.cpp"
-	  echo "import_safe" > "cf$2${chars[i]}.cpp"
+	  printf "import_safe" > "cf$2${chars[i]}.cpp"
+	  subl "cf$2${chars[i]}.cpp"
 	done
 
 else
@@ -17,6 +18,6 @@ else
     for ((i=1; i<=$2; i++))
 	do
 	  echo "$1p$i.cpp"
-	  echo "import_f" > "$1p$i.cpp"
+	  printf "import_f" > "$1p$i.cpp"
 	done
 fi

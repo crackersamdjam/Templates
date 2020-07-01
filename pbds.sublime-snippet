@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+typedef __gnu_pbds::tree<T, __gnu_pbds::null_type, less_equal<T>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> bbst;
+]]></content>
+	<tabTrigger>import_pbds</tabTrigger>
+	<scope>source.c++</scope>
+</snippet>

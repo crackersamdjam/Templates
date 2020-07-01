@@ -1,0 +1,7 @@
+<snippet>
+	<content><![CDATA[
+#pragma GCC ivdep
+]]></content>
+	<tabTrigger>import_vectorize</tabTrigger>
+	<scope>source.c++</scope>
+</snippet>

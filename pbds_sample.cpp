@@ -16,18 +16,18 @@ bbst t;
 
 int main(){
 
-    t.insert({1, 1});
-    t.insert({2, 0});
-    t.insert({3, 5});
+	t.insert({1, 1});
+	t.insert({2, 0});
+	t.insert({3, 5});
 
-    pair<int,int> res = *t.find_by_order(2);
-    print(res.first, res.second);
-    
-    if(t.find({5, 5}) == t.end())
-        printf("not found\n");
-    
-    int ans = t.order_of_key({2, 0});
-    printf("%d\n",ans);
-    
-    return 0;
+	pair<int,int> res = *t.find_by_order(2);
+	print(res.first, res.second);
+	
+	if(t.find({5, 5}) == t.end())
+		printf("not found\n");
+	
+	int ans = t.order_of_key({2, 0});
+	printf("%d\n",ans);
+	
+	return 0;
 }

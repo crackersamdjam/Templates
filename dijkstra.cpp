@@ -16,19 +16,19 @@ priority_queue<pii, vector<pii>, greater<pii>> q;
 int dis[MM], pre[MM];
 
 int main(){
-    
-    
-    
-    while(!q.empty()){
-        int d = q.top().first; int u = q.top().second; q.pop();
-        if(d > dis[u]) continue;
-        for(auto e: adj[u]){
-            if(dis[u] + e.second < dis[e.first]){
-                pre[e.first] = u;
-                q.push({dis[e.first] = dis[u] + e.second, e.first});
-            }
-        }
-    }
-    
-    return 0;
+	
+	
+	
+	while(!q.empty()){
+		int d = q.top().first; int u = q.top().second; q.pop();
+		if(d > dis[u]) continue;
+		for(auto e: adj[u]){
+			if(dis[u] + e.second < dis[e.first]){
+				pre[e.first] = u;
+				q.push({dis[e.first] = dis[u] + e.second, e.first});
+			}
+		}
+	}
+	
+	return 0;
 }

@@ -20,32 +20,32 @@ string s, t;
 ll p[MM];
 
 int main(){
-    
-    cin.sync_with_stdio(0);
-    cin.tie(0);
-    
-    cin >> n >> s;
-    
-    p[0] = 1;
-    for(int i = 1; i < MM; i++)
-        p[i] = p[i-1]*base % mod;
-    
-    for(int z = 1; z < n; z++){
-        cin >> t;
-        
-        ll lv = 0, rv = 0, ans = -1;
-        
-        for(int i = 0; i < min(s.size(), t.size()); i++){
-            lv = (s[s.size()-1-i]*p[i] % mod + lv) % mod;
-            rv = (rv*base % mod + t[i]) % mod;
-            
-            if(lv == rv)
-                ans = i;
-        }
-        s += t.substr(ans+1);
-    }
-    
-    cout << s << '\n';
-    
-    return 0;
+	
+	cin.sync_with_stdio(0);
+	cin.tie(0);
+	
+	cin >> n >> s;
+	
+	p[0] = 1;
+	for(int i = 1; i < MM; i++)
+		p[i] = p[i-1]*base % mod;
+	
+	for(int z = 1; z < n; z++){
+		cin >> t;
+		
+		ll lv = 0, rv = 0, ans = -1;
+		
+		for(int i = 0; i < min(s.size(), t.size()); i++){
+			lv = (s[s.size()-1-i]*p[i] % mod + lv) % mod;
+			rv = (rv*base % mod + t[i]) % mod;
+			
+			if(lv == rv)
+				ans = i;
+		}
+		s += t.substr(ans+1);
+	}
+	
+	cout << s << '\n';
+	
+	return 0;
 }

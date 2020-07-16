@@ -14,8 +14,8 @@ elif [ $1 = "cf" ]; then
 	done
 
 else
-    echo "Number"
-    for ((i=1; i<=$2; i++))
+	echo "Number"
+	for ((i=1; i<=$2; i++))
 	do
 	  echo "$1p$i.cpp"
 	  printf "import_f" > "$1p$i.cpp"

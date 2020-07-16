@@ -13,11 +13,11 @@ using T = long long;
 const int MM = 4e5+5;
 
 struct node{
-    T val, lp;
-    void apply(T v){
-        val += v;
-        lp += v;
-    }
+	T val, lp;
+	void apply(T v){
+		val += v;
+		lp += v;
+	}
 };
 
 struct segtree{
@@ -26,27 +26,27 @@ struct segtree{
 #define nm ((nl+nr)>>1)
 #define LS 0
 #define RS MM-1
-    node tree[MM*4];
-    T DEF = 0;
-    //default value
-    
-    T merge(T va, T vb){
-        return max(va, vb);
-    }
-    
-    void push_up(int rt){
-        tree[rt].val = merge(tree[lc].val, tree[rc].val);
-    }
-    
-    // node with lazy val means yet to push to children (but updated itself)
-    void push_down(int rt, int nl, int nr){
-        T &val = tree[rt].lp;
-        if(nl != nr){
-            tree[lc].apply(val);
-            tree[rc].apply(val);
-        }
-        val = DEF;
-    }
+	node tree[MM*4];
+	T DEF = 0;
+	//default value
+	
+	T merge(T va, T vb){
+		return max(va, vb);
+	}
+	
+	void push_up(int rt){
+		tree[rt].val = merge(tree[lc].val, tree[rc].val);
+	}
+	
+	// node with lazy val means yet to push to children (but updated itself)
+	void push_down(int rt, int nl, int nr){
+		T &val = tree[rt].lp;
+		if(nl != nr){
+			tree[lc].apply(val);
+			tree[rc].apply(val);
+		}
+		val = DEF;
+	}
 	
 	void build(int l, int r, int rt){
 		int nl = l, nr = r;
@@ -61,25 +61,25 @@ struct segtree{
 	}
 	
 	void build(){
-    	build(LS, RS, 1);
+		build(LS, RS, 1);
 	}
-    
-    void update(int l, int r, T val, int nl, int nr, int rt){
-        if(r < nl || l > nr)
-            return;
-        if(l <= nl && r >= nr){
-            tree[rt].apply(val);
-            return;
-        }
-        push_down(rt, nl, nr);
-        update(l, r, val, nl, nm, lc);
-        update(l, r, val, nm+1, nr, rc);
-        push_up(rt);
-    }
-    
+	
+	void update(int l, int r, T val, int nl, int nr, int rt){
+		if(r < nl || l > nr)
+			return;
+		if(l <= nl && r >= nr){
+			tree[rt].apply(val);
+			return;
+		}
+		push_down(rt, nl, nr);
+		update(l, r, val, nl, nm, lc);
+		update(l, r, val, nm+1, nr, rc);
+		push_up(rt);
+	}
+	
 	void update(int l, int r, T val){
 			update(l, r, val, LS, RS, 1);
-    }
+	}
 		
 	T query(int l, int r, int nl, int nr, int rt){
 		if(r < nl || l > nr)
@@ -99,11 +99,11 @@ struct segtree{
 } t;
 
 int main(){
-    
-    t.build();
-    t.update(1, 2, 4);
-    t.update(2, 5, 1);
-    print(t.query(2, 3));
-    
-    return 0;
+	
+	t.build();
+	t.update(1, 2, 4);
+	t.update(2, 5, 1);
+	print(t.query(2, 3));
+	
+	return 0;
 }

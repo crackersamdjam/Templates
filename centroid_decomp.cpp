@@ -17,67 +17,67 @@ vector<pii> adj[MM];
 bool vis[MM];
 
 int getsz(int cur, int pre){
-    sz[cur] = 1;
-    for(auto e: adj[cur]){
-        int u = e.first;
-        if(u != pre && !vis[u])
-            sz[cur] += getsz(u, cur);
-    }
-    return sz[cur];
+	sz[cur] = 1;
+	for(auto e: adj[cur]){
+		int u = e.first;
+		if(u != pre && !vis[u])
+			sz[cur] += getsz(u, cur);
+	}
+	return sz[cur];
 }
 
 int findcent(int cur, int pre){
-    for(auto e: adj[cur]){
-        int u = e.first;
-        if(!vis[u] && u != pre && sz[u]*2 > tot)
-            return findcent(u, cur);
-    }
-    return cur;
+	for(auto e: adj[cur]){
+		int u = e.first;
+		if(!vis[u] && u != pre && sz[u]*2 > tot)
+			return findcent(u, cur);
+	}
+	return cur;
 }
 
 void dfs1(int cur, int pre){
-    
-    for(auto u: adj[cur]){
-        if(u.first == pre || vis[u.first])
-            continue;
-        
-        // do stuff
-        
-        dfs1(u.first, cur);
-    }
+	
+	for(auto u: adj[cur]){
+		if(u.first == pre || vis[u.first])
+			continue;
+		
+		// do stuff
+		
+		dfs1(u.first, cur);
+	}
 }
 
 
 void go(int root){
-    
-    getsz(root, -1);
-    tot = sz[root];
-    if(tot == 1)
-        return;
-    int cent = findcent(root, -1);
-    vis[cent] = 1;
-    
-    dfs1(cent, 0);
-    
-    // process paths
-    
-    for(auto u: adj[cent]){
-        if(vis[u.first])
-            continue;
-        
-        // subtract overcount for each subtree (if necessary)
-    }
-    
-    for(auto u: adj[cent]){
-        if(!vis[u.first])
-            go(u.first);
-    }
+	
+	getsz(root, -1);
+	tot = sz[root];
+	if(tot == 1)
+		return;
+	int cent = findcent(root, -1);
+	vis[cent] = 1;
+	
+	dfs1(cent, 0);
+	
+	// process paths
+	
+	for(auto u: adj[cent]){
+		if(vis[u.first])
+			continue;
+		
+		// subtract overcount for each subtree (if necessary)
+	}
+	
+	for(auto u: adj[cent]){
+		if(!vis[u.first])
+			go(u.first);
+	}
 }
 
 
 int main(){
-    
-    
-    
-    return 0;
+	
+	
+	
+	return 0;
 }

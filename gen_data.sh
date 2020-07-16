@@ -11,9 +11,9 @@ echo '- batched:' >> init.yml
 
 for((i=1;i<=20;i++)); do
 	v=$((i+2>20 ? 20 : i+2))
-    echo $i
+	echo $i
 	echo "v $v"
-    ./gen $v > data/$i.in || { echo 'gen run failed'; exit 1;}
+	./gen $v > data/$i.in || { echo 'gen run failed'; exit 1;}
 	#cat data/$i.in
 	echo "  - {in: data/$i.in}" >> init.yml
 done
@@ -39,12 +39,12 @@ echo '  points: 30' >> init.yml
 echo '- batched:' >> init.yml
 
 for((i=40;i<=70;i++)); do
-    v=$((2048-70+$i))
-    echo $i
-    echo "v $v"
-    ./gen $v > data/$i.in || { echo 'gen run failed'; exit 1;}
-    #cat data/$i.in
-    echo "  - {in: data/$i.in}" >> init.yml
+	v=$((2048-70+$i))
+	echo $i
+	echo "v $v"
+	./gen $v > data/$i.in || { echo 'gen run failed'; exit 1;}
+	#cat data/$i.in
+	echo "  - {in: data/$i.in}" >> init.yml
 done
 
 echo '  points: 40' >> init.yml

@@ -19,54 +19,54 @@ vector<int> adj[MM];
 
 // generates a random tree with n vertices (Prufer Sequence)
 vector<pair<int, int>> init(){
-    vector<int> code(n-2);
-    for(int &i: code)
-        i = randint(0, n-1);
-    
-    vector<int> degree(n, 1);
-    for(int i : code)
-        degree[i]++;
-    
-    int ptr = 0;
-    while(degree[ptr] != 1)
-        ptr++;
-    int leaf = ptr;
-    
-    vector<pair<int, int>> edges;
-    for(int v : code){
-        edges.emplace_back(leaf, v);
-        if(--degree[v] == 1 && v < ptr){
-            leaf = v;
-        }
-        else{
-            ptr++;
-            while(degree[ptr] != 1)
-                ptr++;
-            leaf = ptr;
-        }
-    }
-    edges.emplace_back(leaf, n-1);
-    return edges;
+	vector<int> code(n-2);
+	for(int &i: code)
+		i = randint(0, n-1);
+	
+	vector<int> degree(n, 1);
+	for(int i : code)
+		degree[i]++;
+	
+	int ptr = 0;
+	while(degree[ptr] != 1)
+		ptr++;
+	int leaf = ptr;
+	
+	vector<pair<int, int>> edges;
+	for(int v : code){
+		edges.emplace_back(leaf, v);
+		if(--degree[v] == 1 && v < ptr){
+			leaf = v;
+		}
+		else{
+			ptr++;
+			while(degree[ptr] != 1)
+				ptr++;
+			leaf = ptr;
+		}
+	}
+	edges.emplace_back(leaf, n-1);
+	return edges;
 }
 
 
 int main(){
-    
-    n = 10;
-    print(n);
-    
-    puts("-------------");
-    
-    vector<pair<int, int>> edges = init();
-    for(auto &e: edges){
-        e.first++, e.second++;
-        print(e.first, e.second);
-        adj[e.first].emplace_back(e.second);
-        adj[e.second].emplace_back(e.first);
-    }
-    
-    puts("-------------");
-    
-    
-    return 0;
+	
+	n = 10;
+	print(n);
+	
+	puts("-------------");
+	
+	vector<pair<int, int>> edges = init();
+	for(auto &e: edges){
+		e.first++, e.second++;
+		print(e.first, e.second);
+		adj[e.first].emplace_back(e.second);
+		adj[e.second].emplace_back(e.first);
+	}
+	
+	puts("-------------");
+	
+	
+	return 0;
 }

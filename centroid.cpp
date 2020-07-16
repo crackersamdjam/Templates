@@ -19,33 +19,33 @@ vector<int> adj[MM], vec;
 
 //gets sizes and pushes centroid(s) into vec
 ll getsz(int cur, int pre){
-    bool b = 1;
-    sz[cur] = a[cur];
-    for(int u: adj[cur]){
-        if(u != pre){
-            sz[cur] += getsz(u, cur);
-            if(sz[u] > total/2)
-                b = 0;
-        }
-    }
-    if(b && ((total - sz[cur]) <= total/2))
-        vec.push_back(cur);
-    return sz[cur];
+	bool b = 1;
+	sz[cur] = a[cur];
+	for(int u: adj[cur]){
+		if(u != pre){
+			sz[cur] += getsz(u, cur);
+			if(sz[u] > total/2)
+				b = 0;
+		}
+	}
+	if(b && ((total - sz[cur]) <= total/2))
+		vec.push_back(cur);
+	return sz[cur];
 }
 
 int main(){
-    
-    scan(n);
-    
-    //read populations into a[]
-    
-    //read graph into adj
-    
-    getsz(1, 0);
-    
-    printf("centroids are:\n");
-    for(int i: vec)
-        printf("%d ", i);
-    
-    return 0;
+	
+	scan(n);
+	
+	//read populations into a[]
+	
+	//read graph into adj
+	
+	getsz(1, 0);
+	
+	printf("centroids are:\n");
+	for(int i: vec)
+		printf("%d ", i);
+	
+	return 0;
 }

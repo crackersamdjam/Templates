@@ -16,7 +16,7 @@ ll base[] = {131};
 ll mod[] = {(ll)1e9+7};
 
 int flog(ll x){
-    return 63-__builtin_clz(x);
+	return 63-__builtin_clz(x);
 }
 ll gcd(ll gcd_a, ll gcd_b){return gcd_b == 0 ? gcd_a : gcd(gcd_b, gcd_a % gcd_b);}
 ll fpow(ll fpow_b, ll fpow_exp, ll fpow_mod){if(fpow_exp == 0) return 1;ll t = fpow(fpow_b,fpow_exp/2,fpow_mod);if(fpow_exp&1) return t*t%fpow_mod*fpow_b%fpow_mod;return t*t%fpow_mod;}
@@ -31,51 +31,51 @@ ll val[N];
 bool done;
 
 void go(int j, int i, ll h, string &s){
-    if(done)
-        return;
-    if(!i){
-        if(mp[h].size()){
-            a[j] = mp[h];
-            b[j] = s;
-            val[j] = h;
-            done = 1;
-        }
-        mp[h] = s;
-        return;
-    }
-    if(j == 0){
-        for(int c = 'a'; c <= 'z'; c++){
-            s.push_back(c);
-            go(j, i+1, (h*base[j]+c)%mod[j], s);
-            s.pop_back();
-        }
-    }
-    else{
-        s.push_back(0);
-        go(j, i+1, (h*base[j])%mod[j], s);
-        s.pop_back();
-        //fix
-    }
+	if(done)
+		return;
+	if(!i){
+		if(mp[h].size()){
+			a[j] = mp[h];
+			b[j] = s;
+			val[j] = h;
+			done = 1;
+		}
+		mp[h] = s;
+		return;
+	}
+	if(j == 0){
+		for(int c = 'a'; c <= 'z'; c++){
+			s.push_back(c);
+			go(j, i+1, (h*base[j]+c)%mod[j], s);
+			s.pop_back();
+		}
+	}
+	else{
+		s.push_back(0);
+		go(j, i+1, (h*base[j])%mod[j], s);
+		s.pop_back();
+		//fix
+	}
 }
 
 int main(){
-    
-    for(int i = 0; i < N; i++){
-        ll sq = sqrtl(mod[i]);
-        int m = log2(sq)/log2(26)+2;
-        m = min(m, MAXLEN);
-        print(fpow(26, m, 1e16), sq);
-        
-        do{
-            mp.clear();
-            done = 0;
-            string def;
-            go(i, 0, m, def);
-            
-        } while(!done);
-    }
-    
-    return 0;
+	
+	for(int i = 0; i < N; i++){
+		ll sq = sqrtl(mod[i]);
+		int m = log2(sq)/log2(26)+2;
+		m = min(m, MAXLEN);
+		print(fpow(26, m, 1e16), sq);
+		
+		do{
+			mp.clear();
+			done = 0;
+			string def;
+			go(i, 0, m, def);
+			
+		} while(!done);
+	}
+	
+	return 0;
 }
 /*
  * unfinished

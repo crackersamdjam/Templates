@@ -15,40 +15,40 @@ bool vis[MM];
 vector<pair<int, int>> adj[MM];
 
 int main(){
-    
-    scan(N, M);
-    
-    for(int i = 0,a,b,c; i < M; i++){
-        scan(a, b, c);
-        adj[a].push_back({b, c});
-        adj[b].push_back({a, c});
-    }
-    
-    memset(dis, 0x3f, sizeof dis);
-    
-    dis[1] = 0;
-    
-    for(int i = 0; i < N; i++){
-        int edge = INT_MAX, next = -1;
-        for(int j = 1; j <= N; j++){
-            if(dis[j] < edge && !vis[j]){
-                edge = dis[j];
-                next = j;
-            }
-        }
-        if(next == -1)
-            break;
-        vis[next] = 1;
-        for(auto e: adj[next]){
-            if(dis[next] + e.second < dis[e.first]){
-                dis[e.first] = dis[next] + e.second;
-            }
-        }
-    }
-    
-    for(int i = 1; i <= N; i++){
-        print(dis[i] == 0x3f3f3f3f? -1: dis[i]);
-    }
-    
-    return 0;
+	
+	scan(N, M);
+	
+	for(int i = 0,a,b,c; i < M; i++){
+		scan(a, b, c);
+		adj[a].push_back({b, c});
+		adj[b].push_back({a, c});
+	}
+	
+	memset(dis, 0x3f, sizeof dis);
+	
+	dis[1] = 0;
+	
+	for(int i = 0; i < N; i++){
+		int edge = INT_MAX, next = -1;
+		for(int j = 1; j <= N; j++){
+			if(dis[j] < edge && !vis[j]){
+				edge = dis[j];
+				next = j;
+			}
+		}
+		if(next == -1)
+			break;
+		vis[next] = 1;
+		for(auto e: adj[next]){
+			if(dis[next] + e.second < dis[e.first]){
+				dis[e.first] = dis[next] + e.second;
+			}
+		}
+	}
+	
+	for(int i = 1; i <= N; i++){
+		print(dis[i] == 0x3f3f3f3f? -1: dis[i]);
+	}
+	
+	return 0;
 }

@@ -17,60 +17,60 @@ ll h[N][MM], p[N][MM];
 char str[MM];
 
 ll get(int j, int l, int r){
-    ll hs = (h[j][r] - h[j][l]*p[j][r-l]) % mod[j];
-    if(hs < 0)
-        hs += mod[j];
-    return hs;
+	ll hs = (h[j][r] - h[j][l]*p[j][r-l]) % mod[j];
+	if(hs < 0)
+		hs += mod[j];
+	return hs;
 }
 
 bool check(int la, int ra, int lb, int rb){
-    for(int j = 0; j < N; j++){
-        if(get(j, la, ra) != get(j, lb, rb))
-            return 0;
-    }
-    return 1;
+	for(int j = 0; j < N; j++){
+		if(get(j, la, ra) != get(j, lb, rb))
+			return 0;
+	}
+	return 1;
 }
 
 int main(){
-    
-    scanf("%s %d", str+1, &k);
-    
-    n = strlen(str+1);
-    
-    for(int j = 0; j < N; j++){
-        p[j][0] = 1;
-        for(int i = 1; i <= n; i++){
-            p[j][i] = p[j][i-1]*base % mod[j];
-            h[j][i] = (h[j][i-1]*base + str[i]) % mod[j];
-        }
-    }
-    
-    int st = 1;
-    for(int i = 1; i <= n-k+1; i++){
-        
-        if(str[i] < str[st]){
-            st = i;
-            continue;
-        }
-        if(str[i] > str[st])
-            continue;
-        
-        int l = 0, m, r = k;
-        while(l <= r){
-            m = (l+r)/2;
-            if(check(i-1, i+m, st-1, st+m))
-                l = m+1;
-            else
-                r = m-1;
-        }
-        if(l < k && str[i+l] < str[st+l])
-            st = i;
-    }
-    
-    for(int i = st; i < st+k; i++)
-        pc(str[i]);
-    
-    pc(10);
-    
-    return 0;
+	
+	scanf("%s %d", str+1, &k);
+	
+	n = strlen(str+1);
+	
+	for(int j = 0; j < N; j++){
+		p[j][0] = 1;
+		for(int i = 1; i <= n; i++){
+			p[j][i] = p[j][i-1]*base % mod[j];
+			h[j][i] = (h[j][i-1]*base + str[i]) % mod[j];
+		}
+	}
+	
+	int st = 1;
+	for(int i = 1; i <= n-k+1; i++){
+		
+		if(str[i] < str[st]){
+			st = i;
+			continue;
+		}
+		if(str[i] > str[st])
+			continue;
+		
+		int l = 0, m, r = k;
+		while(l <= r){
+			m = (l+r)/2;
+			if(check(i-1, i+m, st-1, st+m))
+				l = m+1;
+			else
+				r = m-1;
+		}
+		if(l < k && str[i+l] < str[st+l])
+			st = i;
+	}
+	
+	for(int i = st; i < st+k; i++)
+		pc(str[i]);
+	
+	pc(10);
+	
+	return 0;
 }

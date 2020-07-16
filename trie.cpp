@@ -10,45 +10,45 @@ template<typename First, typename ... Ints> void print(First arg, Ints... rest){
 using namespace std;
 
 struct node{
-    char n;
-    map<char, node*> ch;
-    node(int nn):n(nn){}
-    ~node(){
-        for(auto i: ch)
-            delete i.second;
-    }
+	char n;
+	map<char, node*> ch;
+	node(int nn):n(nn){}
+	~node(){
+		for(auto i: ch)
+			delete i.second;
+	}
 };
 
 int main(){
-    
-    int T, N;
-    scan(T);
-    for(int tc = 1; tc <= T; tc++){
-        int tot = 0;
-        node *rt = new node('a');
-        scan(N);
-        
-        for(int t = 0; t < N; t++){
-            string str;
-            cin >> str;
-            int ans = str.size();
-            node *pre = rt;
-            for(int i = 0; i < str.size(); i++){
-                
-                if(pre->ch.find(str[i]) == pre->ch.end()){
-                    ans = min(ans, i+1);
-                    pre->ch[str[i]] = new node(str[i]);
-                }
-                pre = pre->ch[str[i]];
-            }
-            
-            tot += max(ans, 1);
-        }
-        
-        printf("Case #%d: %d\n", tc, tot);
-        
-        delete rt;
-    }
-    
-    return 0;
+	
+	int T, N;
+	scan(T);
+	for(int tc = 1; tc <= T; tc++){
+		int tot = 0;
+		node *rt = new node('a');
+		scan(N);
+		
+		for(int t = 0; t < N; t++){
+			string str;
+			cin >> str;
+			int ans = str.size();
+			node *pre = rt;
+			for(int i = 0; i < str.size(); i++){
+				
+				if(pre->ch.find(str[i]) == pre->ch.end()){
+					ans = min(ans, i+1);
+					pre->ch[str[i]] = new node(str[i]);
+				}
+				pre = pre->ch[str[i]];
+			}
+			
+			tot += max(ans, 1);
+		}
+		
+		printf("Case #%d: %d\n", tc, tot);
+		
+		delete rt;
+	}
+	
+	return 0;
 }

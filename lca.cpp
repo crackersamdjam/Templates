@@ -14,54 +14,54 @@ const int MM = 1e5+1, LOG = 17;
 int n, dep[MM], sp[LOG][MM], val[LOG][MM];
 
 int getlca(int u, int v){
-    if(dep[u] < dep[v])
-        swap(u, v);
-    for(int i = LOG-1; i >= 0; i--){
-        if(~sp[i][u] && dep[sp[i][u]] >= dep[v])
-            u = sp[i][u];
-    }
-    if(u == v)
-        return u;
-    for(int i = LOG-1; i >= 0; i--){
-        if(~sp[i][u] && ~sp[i][v] && sp[i][u] != sp[i][v]){
-            u = sp[i][u];
-            v = sp[i][v];
-        }
-    }
-    return sp[0][u];
+	if(dep[u] < dep[v])
+		swap(u, v);
+	for(int i = LOG-1; i >= 0; i--){
+		if(~sp[i][u] && dep[sp[i][u]] >= dep[v])
+			u = sp[i][u];
+	}
+	if(u == v)
+		return u;
+	for(int i = LOG-1; i >= 0; i--){
+		if(~sp[i][u] && ~sp[i][v] && sp[i][u] != sp[i][v]){
+			u = sp[i][u];
+			v = sp[i][v];
+		}
+	}
+	return sp[0][u];
 }
 
 int query(int a, int b){
-    int lca = getlca(a, b), ret = 0;
-    for(int i = LOG-1; i >= 0; i--){
-        if(dep[a] >= dep[lca]+(1<<i)){
-            ret = max(ret, val[i][a]);
-            a = sp[i][a];
-        }
-    }
-    for(int i = LOG-1; i >= 0; i--){
-        if(dep[b] >= dep[lca]+(1<<i)){
-            ret = max(ret, val[i][b]);
-            b = sp[i][b];
-        }
-    }
-    return ret;
+	int lca = getlca(a, b), ret = 0;
+	for(int i = LOG-1; i >= 0; i--){
+		if(dep[a] >= dep[lca]+(1<<i)){
+			ret = max(ret, val[i][a]);
+			a = sp[i][a];
+		}
+	}
+	for(int i = LOG-1; i >= 0; i--){
+		if(dep[b] >= dep[lca]+(1<<i)){
+			ret = max(ret, val[i][b]);
+			b = sp[i][b];
+		}
+	}
+	return ret;
 }
 
 int main(){
-    memset(sp, -1, sizeof sp);
-    
-    //dfs
-    
-    for(int i = 1; i < LOG; i++){
-        for(int j = 0; j <= n; j++){
-            int u = sp[i-1][j];
-        	if(~u){
-                sp[i][j] = sp[i-1][u];
-                val[i][j] = max(val[i-1][j], val[i-1][u]);
-            }
-        }
-    }
-    
-    return 0;
+	memset(sp, -1, sizeof sp);
+	
+	//dfs
+	
+	for(int i = 1; i < LOG; i++){
+		for(int j = 0; j <= n; j++){
+			int u = sp[i-1][j];
+			if(~u){
+				sp[i][j] = sp[i-1][u];
+				val[i][j] = max(val[i-1][j], val[i-1][u]);
+			}
+		}
+	}
+	
+	return 0;
 }

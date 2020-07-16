@@ -18,6 +18,6 @@ int randint(int l, int r){return uniform_int_distribution<int>(l, r)(g);}
 ll randll(ll l, ll r){return uniform_int_distribution<ll>(l, r)(g);}
 
 int main(int argc, char *args[]){
-    int SEED = argc > 1 ? atoi(args[1]) : 0;
-    g = mt19937_64(SEED);
+	int SEED = argc > 1 ? atoi(args[1]) : 0;
+	g = mt19937_64(SEED);
 }

@@ -19,48 +19,48 @@ ll c, dp[MM], a[MM];
 #define sq(x) (x)*(x)
 
 struct line{
-    ll m, b;
-    ll f(ll x){
-        return m*x + b;
-    }
+	ll m, b;
+	ll f(ll x){
+		return m*x + b;
+	}
 } tree[MN*4];
 
 void add(line ln, int l = 0, int r = MN-1, int rt = 1){
-    int m = (l+r)/2;
-    bool bl = ln.f(l) < tree[rt].f(l);
-    bool bm = ln.f(m) < tree[rt].f(m);
-    if(bm)
-        swap(tree[rt], ln);
-    if(l == r)
-        return;
-    if(bl != bm)
-        add(ln, l, m, rt<<1);
-    else
-        add(ln, m+1, r, rt<<1|1);
+	int m = (l+r)/2;
+	bool bl = ln.f(l) < tree[rt].f(l);
+	bool bm = ln.f(m) < tree[rt].f(m);
+	if(bm)
+		swap(tree[rt], ln);
+	if(l == r)
+		return;
+	if(bl != bm)
+		add(ln, l, m, rt<<1);
+	else
+		add(ln, m+1, r, rt<<1|1);
 }
 
 ll get(int x, int l = 0, int r = MN-1, int rt = 1){
-    int m = (l+r)/2;
-    if(l == r)
-        return tree[rt].f(x);
-    if(x <= m)
-        return min(tree[rt].f(x), get(x, l, m, rt<<1));
-    return min(tree[rt].f(x), get(x, m+1, r, rt<<1|1));
+	int m = (l+r)/2;
+	if(l == r)
+		return tree[rt].f(x);
+	if(x <= m)
+		return min(tree[rt].f(x), get(x, l, m, rt<<1));
+	return min(tree[rt].f(x), get(x, m+1, r, rt<<1|1));
 }
 
 int main(){
-    scan(n, c, a[1]);
-    add({-2*a[1], a[1]*a[1]});
-    
-    for(int i = 2; i <= n; i++){
-        scan(a[i]);
-        dp[i] = get(a[i]) + a[i]*a[i] + c;
-        add({-2*a[i], dp[i] + a[i]*a[i]});
-    }
-    
-    print(dp[n]);
-    
-    return 0;
+	scan(n, c, a[1]);
+	add({-2*a[1], a[1]*a[1]});
+	
+	for(int i = 2; i <= n; i++){
+		scan(a[i]);
+		dp[i] = get(a[i]) + a[i]*a[i] + c;
+		add({-2*a[i], dp[i] + a[i]*a[i]});
+	}
+	
+	print(dp[n]);
+	
+	return 0;
 }
 /*
 dp[i] = dp[j] + (a[i]-a[j])^2 + c

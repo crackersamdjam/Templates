@@ -15,47 +15,47 @@ int n, r[MM];
 char s[MM];
 
 int main(){
-    
-    scanf("%d %s", &n, s+1);
-    
-    int m = n*2+1;
-    
-    for(int i = m; i; i--){
-        if(i&1)
-            s[i] = s[i>>1];
-        else
-            s[i] = '#';
-    }
-    s[1] = '@'; //stop from exending beyond
-    s[m+1] = '#';
-    
-    for(int i = 1, mx = 0, p = 0; i <= m; i++){
-        //cout<<i<<' '<<s[i]<<'\n';
-        if(i >= mx)
-            r[i] = 1;
-        else
-            r[i] = min(mx-i, r[p*2-i]);
-        
-        //p*2 = leftend + rightend
-        //leftend + rightend-i reflects i across p
-        
-        while(s[i-r[i]] == s[i+r[i]])
-            r[i]++;
-        if(i + r[i] > mx)
-            mx = i + r[i], p = i;
-    }
-    
-    int* st = max_element(r+1, r+n*2+1), ans = 0;
-    
-    for(int i = st-r-*st+1; i < st-r+*st; i++){
-        if(i%2)
-            pc(s[i]), ans++;
-    }
-    
-    pc(10);
-    
-    print(ans);
-    assert(ans == *st-1);
-    
-    return 0;
+	
+	scanf("%d %s", &n, s+1);
+	
+	int m = n*2+1;
+	
+	for(int i = m; i; i--){
+		if(i&1)
+			s[i] = s[i>>1];
+		else
+			s[i] = '#';
+	}
+	s[1] = '@'; //stop from exending beyond
+	s[m+1] = '#';
+	
+	for(int i = 1, mx = 0, p = 0; i <= m; i++){
+		//cout<<i<<' '<<s[i]<<'\n';
+		if(i >= mx)
+			r[i] = 1;
+		else
+			r[i] = min(mx-i, r[p*2-i]);
+		
+		//p*2 = leftend + rightend
+		//leftend + rightend-i reflects i across p
+		
+		while(s[i-r[i]] == s[i+r[i]])
+			r[i]++;
+		if(i + r[i] > mx)
+			mx = i + r[i], p = i;
+	}
+	
+	int* st = max_element(r+1, r+n*2+1), ans = 0;
+	
+	for(int i = st-r-*st+1; i < st-r+*st; i++){
+		if(i%2)
+			pc(s[i]), ans++;
+	}
+	
+	pc(10);
+	
+	print(ans);
+	assert(ans == *st-1);
+	
+	return 0;
 }

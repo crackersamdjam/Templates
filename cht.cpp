@@ -19,28 +19,28 @@ int n, q[MM], l, r;
 ll c, dp[MM], a[MM];
 
 long double eval(int k, int j){
-    return 1.0*(dp[j] - dp[k] + sq(a[j]) - sq(a[k]))/(a[j]-a[k]);
+	return 1.0*(dp[j] - dp[k] + sq(a[j]) - sq(a[k]))/(a[j]-a[k]);
 }
 
 int main(){
-    scan(n, c, a[0]);
-    
-    for(int i = 1; i < n; i++){
-        scan(a[i]);
-        while(l < r and 2*a[i] >= eval(q[l], q[l+1]))
-            l++;
-        
-        dp[i] = dp[q[l]] + sq(a[i]-a[q[l]]) + c;
-        
-        while(l < r and eval(q[r-1], q[r]) >= eval(q[r], i))
-            r--;
-        
-        q[++r] = i;
-    }
-    
-    print(dp[n-1]);
-    
-    return 0;
+	scan(n, c, a[0]);
+	
+	for(int i = 1; i < n; i++){
+		scan(a[i]);
+		while(l < r and 2*a[i] >= eval(q[l], q[l+1]))
+			l++;
+		
+		dp[i] = dp[q[l]] + sq(a[i]-a[q[l]]) + c;
+		
+		while(l < r and eval(q[r-1], q[r]) >= eval(q[r], i))
+			r--;
+		
+		q[++r] = i;
+	}
+	
+	print(dp[n-1]);
+	
+	return 0;
 }
 /*
 dp[i] = dp[j] + (a[i]-a[j])^2 + c

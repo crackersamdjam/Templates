@@ -10,12 +10,16 @@ template<typename First, typename ... Ints> void print(First arg, Ints... rest){
 
 using namespace std;
 using T = long long;
+using L = long long;
 const int MM = 4e5+5;
 
 struct node{
-	T val, lp;
-	void apply(T v){
+	T val;
+	L lp;
+	int sz;
+	inline void apply(L v){
 		val += v;
+		// val += v*sz; range sum
 		lp += v;
 	}
 };
@@ -27,58 +31,60 @@ struct segtree{
 #define LS 0
 #define RS MM-1
 	node tree[MM*4];
-	T DEF = 0;
-	//default value
+	const T DEF = 0;
+	const L DEFL = 0;
 	
-	T merge(T va, T vb){
+	inline T merge(T va, T vb){
 		return max(va, vb);
 	}
 	
-	void push_up(int rt){
+	inline void pull(int rt){
 		tree[rt].val = merge(tree[lc].val, tree[rc].val);
 	}
 	
 	// node with lazy val means yet to push to children (but updated itself)
-	void push_down(int rt, int nl, int nr){
-		T &val = tree[rt].lp;
+	inline void push(int rt, int nl, int nr){
+		L &val = tree[rt].lp;
 		if(nl != nr){
 			tree[lc].apply(val);
 			tree[rc].apply(val);
 		}
-		val = DEF;
+		val = DEFL;
 	}
 	
 	void build(int l, int r, int rt){
 		int nl = l, nr = r;
-		if(l == r){
-			tree[rt].val = DEF;
-			tree[rt].lp = 0;
+		
+		tree[rt].val = DEF;
+		tree[rt].lp = DEFL;
+		tree[rt].sz = r-l+1;
+		
+		if(l == r)
 			return;
-		}
 		build(l, nm, lc);
 		build(nm+1, r, rc);
-		push_up(rt);
+		pull(rt);
 	}
 	
 	void build(){
 		build(LS, RS, 1);
 	}
 	
-	void update(int l, int r, T val, int nl, int nr, int rt){
+	void update(int l, int r, L val, int nl, int nr, int rt){
 		if(r < nl || l > nr)
 			return;
 		if(l <= nl && r >= nr){
 			tree[rt].apply(val);
 			return;
 		}
-		push_down(rt, nl, nr);
+		push(rt, nl, nr);
 		update(l, r, val, nl, nm, lc);
 		update(l, r, val, nm+1, nr, rc);
-		push_up(rt);
+		pull(rt);
 	}
 	
-	void update(int l, int r, T val){
-			update(l, r, val, LS, RS, 1);
+	void update(int l, int r, L val){
+		update(l, r, val, LS, RS, 1);
 	}
 		
 	T query(int l, int r, int nl, int nr, int rt){
@@ -86,7 +92,7 @@ struct segtree{
 			return DEF;
 		if(l <= nl && r >= nr)
 			return tree[rt].val;
-		push_down(rt, nl, nr);
+		push(rt, nl, nr);
 		return merge(query(l, r, nl, nm, lc), query(l, r, nm+1, nr, rc));
 	}
 	
@@ -96,14 +102,14 @@ struct segtree{
 #undef lc
 #undef rc
 #undef nm
-} t;
+} ST;
 
 int main(){
 	
-	t.build();
-	t.update(1, 2, 4);
-	t.update(2, 5, 1);
-	print(t.query(2, 3));
+	ST.build();
+	ST.update(1, 2, 4);
+	ST.update(2, 5, 1);
+	print(ST.query(2, 3));
 	
 	return 0;
 }

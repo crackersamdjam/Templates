@@ -1,15 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
-using T = int;
-const int MM = 1e5+2;
+typedef long long T;
+const int MM = 5e4+5;
 
 struct node{
 	T val, lp;
-	bool up;
-	void apply(T v){
-		val += v;
+	int sz;
+	inline void apply(T v){
+		val += v*sz; //range sum
 		lp += v;
-		up = 1;
 	}
 };
 
@@ -18,39 +17,32 @@ struct segtree{
 #define rc (rt<<1|1)
 #define nm ((nl+nr)>>1)
 	node tree[MM*4];
-	T DEF = 0;
-	//default value
-	
-	T merge(T va, T vb){
-		return va + vb;
-	}
-	
-	void push_up(int rt){
-		tree[rt].val = merge(tree[lc].val, tree[rc].val);
-	}
+	const T DEF = 0;
+	inline T merge(T va, T vb){ return va + vb;}
+	inline void pull(int rt){ tree[rt].val = merge(tree[lc].val, tree[rc].val);}
 	
 	// node with lazy val means yet to push to children (but updated itself)
-	void push_down(int rt, int nl, int nr){
+	inline void push(int rt, int nl, int nr){
 		T &val = tree[rt].lp;
-		if(tree[rt].up && nl != nr){
+		if(nl != nr){
 			tree[lc].apply(val);
 			tree[rc].apply(val);
 		}
 		val = DEF;
-		tree[rt].up = 0;
 	}
 	
 	void build(int l = 0, int r = MM-1, int rt = 1){
 		int nl = l, nr = r;
-		if(l == r){
-			tree[rt].val = DEF;
-			tree[rt].lp = 0;
-			tree[rt].up = 0;
+		
+		tree[rt].val = DEF;
+		tree[rt].lp = 0;
+		tree[rt].sz = r-l+1;
+		
+		if(l == r)
 			return;
-		}
 		build(l, nm, lc);
 		build(nm+1, r, rc);
-		push_up(rt);
+		pull(rt);
 	}
 	
 	void update(int l, int r, T val, int nl = 0, int nr = MM-1, int rt = 1){
@@ -60,10 +52,10 @@ struct segtree{
 			tree[rt].apply(val);
 			return;
 		}
-		push_down(rt, nl, nr);
+		push(rt, nl, nr);
 		update(l, r, val, nl, nm, lc);
 		update(l, r, val, nm+1, nr, rc);
-		push_up(rt);
+		pull(rt);
 	}
 	
 	T query(int l, int r, int nl = 0, int nr = MM-1, int rt = 1){
@@ -71,15 +63,15 @@ struct segtree{
 			return DEF;
 		if(l <= nl && r >= nr)
 			return tree[rt].val;
-		push_down(rt, nl, nr);
+		push(rt, nl, nr);
 		return merge(query(l, r, nl, nm, lc), query(l, r, nm+1, nr, rc));
 	}
 #undef lc
 #undef rc
 #undef nm
-} t;
+} ST;
 
-int n, m;
+int n;
 vector<int> adj[MM];
 int par[MM], dep[MM], heavy[MM], head[MM], pos[MM], ptr;
 
@@ -114,59 +106,34 @@ void init(){
 	adj[1].push_back(0);
 	dfs(0, -1);
 	decompose(1, 1);
-	t.build();
+	ST.build();
 }
 
-int query(int a, int b){
-	int res = 0;
+T query(int a, int b){
+	T res = 0;
 	for(; head[a] != head[b]; b = par[head[b]]){
 		if(dep[head[a]] > dep[head[b]])
 			swap(a, b);
-		res += t.query(pos[head[b]], pos[b]);
+		res += ST.query(pos[head[b]], pos[b]);
 	}
 	if(a != b){
 		if(dep[a] > dep[b])
 			swap(a, b);
-		res += t.query(pos[a]+1, pos[b]);
+		res += ST.query(pos[a]+1, pos[b]);
 	}
 	return res;
 }
 
-void update(int a, int b, int v = 1){
+void update(int a, int b, T v){
 	for(; head[a] != head[b]; b = par[head[b]]){
 		if(dep[head[a]] > dep[head[b]])
 			swap(a, b);
 		int l = pos[head[b]], r = pos[b];
-		t.update(l, r, v);
+		ST.update(l, r, v);
 	}
 	if(a != b){
 		if(dep[a] > dep[b])
 			swap(a, b);
-		t.update(pos[a]+1, pos[b], v);
+		ST.update(pos[a]+1, pos[b], v);
 	}
-}
-
-int main(){
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
-	cin >> n >> m;
-	for(int i = 0,a,b; i < n-1; i++){
-		cin >> a >> b;
-		adj[a].emplace_back(b);
-		adj[b].emplace_back(a);
-	}
-	
-	init();
-	
-	for(int i = 0,a,b; i < m; i++){
-		char c;
-		cin >> c >> a >> b;
-		if(c == 'P')
-			update(a, b);
-		else
-			cout << query(a, b) << '\n';
-	}
-	
-	return 0;
 }

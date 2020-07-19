@@ -71,7 +71,7 @@ struct segtree{
 #undef nm
 } ST;
 
-int n;
+int n, q;
 vector<int> adj[MM];
 int par[MM], dep[MM], heavy[MM], head[MM], pos[MM], ptr;
 
@@ -136,4 +136,29 @@ void update(int a, int b, T v){
 			swap(a, b);
 		ST.update(pos[a]+1, pos[b], v);
 	}
+}
+
+int main(){
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	cin>>n>>q;
+	for(int i = 0,a,b; i < n-1; i++){
+		cin>>a>>b;
+		adj[a].emplace_back(b);
+		adj[b].emplace_back(a);
+	}
+	
+	init();
+	
+	for(int i = 0,a,b; i < q; i++){
+		char c;
+		cin>>c>>a>>b;
+		if(c == 'P')
+			update(a, b, 1);
+		else
+			cout<<query(a, b)<<'\n';
+	}
+	
+	return 0;
 }

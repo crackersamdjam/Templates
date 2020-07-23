@@ -16,7 +16,7 @@ int main(){;
 		pre[0] = 0;
 		for(int i = 1; i < s.size(); i++){
 			int j = pre[i-1];
-			if(j and s[i] != s[j])
+			while(j and s[i] != s[j])
 				j = pre[j-1];
 			if(s[i] == s[j])
 				j++;

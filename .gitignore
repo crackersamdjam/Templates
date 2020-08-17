@@ -3,3 +3,4 @@ CMakeLists.txt
 .*/
 !.gitignore
 !.gitattributes
+test.cpp

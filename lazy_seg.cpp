@@ -8,15 +8,17 @@ template<typename First, typename ... Ints> void scan(First &arg, Ints&... rest)
 template<typename T> void print(T n){printn(n);pc(10);}
 template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
 
+#define lc (rt<<1)
+#define rc (rt<<1|1)
+#define nm ((nl+nr)>>1)
+
 using namespace std;
 using T = long long;
 using L = long long;
 const int MM = 4e5+5;
 
 struct node{
-	T val;
-	L lp;
-	int sz;
+	T val; L lp; int sz;
 	inline void apply(L v){
 		val += v;
 		// val += v*sz; range sum
@@ -25,14 +27,10 @@ struct node{
 };
 
 struct segtree{
-#define lc (rt<<1)
-#define rc (rt<<1|1)
-#define nm ((nl+nr)>>1)
-#define LS 0
-#define RS MM-1
 	node tree[MM*4];
 	const T DEF = 0;
 	const L DEFL = 0;
+	int LS, RS;
 	
 	inline T merge(T va, T vb){
 		return max(va, vb);
@@ -42,74 +40,38 @@ struct segtree{
 		tree[rt].val = merge(tree[lc].val, tree[rc].val);
 	}
 	
-	// node with lazy val means yet to push to children (but updated itself)
-	inline void push(int rt, int nl, int nr){
-		L &val = tree[rt].lp;
-		if(nl != nr){
-			tree[lc].apply(val);
-			tree[rc].apply(val);
-		}
-		val = DEFL;
+	inline void push(int rt, int nl, int nr){ // node with lazy val means yet to push to children (but updated itself)
+		if(nl == nr) return;
+		L &val = tree[rt].lp; tree[lc].apply(val); tree[rc].apply(val); val = DEFL;
 	}
 	
-	void build(int l, int r, int rt){
-		int nl = l, nr = r;
-		
+	void build(int _LS, int _RS){ build(LS = _LS, RS = _RS, 1);} void build(int nl, int nr, int rt){
 		tree[rt].val = DEF;
 		tree[rt].lp = DEFL;
-		tree[rt].sz = r-l+1;
-		
-		if(l == r)
-			return;
-		build(l, nm, lc);
-		build(nm+1, r, rc);
-		pull(rt);
+		tree[rt].sz = nr-nl+1;
+		if(nl == nr) return; build(nl, nm, lc); build(nm+1, nr, rc); pull(rt);
 	}
 	
-	void build(){
-		build(LS, RS, 1);
-	}
-	
-	void update(int l, int r, L val, int nl, int nr, int rt){
-		if(r < nl || l > nr)
-			return;
+	void update(int l, int r, L val){ update(l, r, val, LS, RS, 1);} void update(int l, int r, L val, int nl, int nr, int rt){
+		if(r < nl || l > nr) return;
 		if(l <= nl && r >= nr){
 			tree[rt].apply(val);
 			return;
 		}
-		push(rt, nl, nr);
-		update(l, r, val, nl, nm, lc);
-		update(l, r, val, nm+1, nr, rc);
-		pull(rt);
+		push(rt, nl, nr); update(l, r, val, nl, nm, lc); update(l, r, val, nm+1, nr, rc); pull(rt);
 	}
 	
-	void update(int l, int r, L val){
-		update(l, r, val, LS, RS, 1);
+	T query(int l, int r){ return query(l, r, LS, RS, 1);} T query(int l, int r, int nl, int nr, int rt){
+		if(r < nl || l > nr) return DEF;
+		if(l <= nl && r >= nr) return tree[rt].val;
+		push(rt, nl, nr); return merge(query(l, r, nl, nm, lc), query(l, r, nm+1, nr, rc));
 	}
-		
-	T query(int l, int r, int nl, int nr, int rt){
-		if(r < nl || l > nr)
-			return DEF;
-		if(l <= nl && r >= nr)
-			return tree[rt].val;
-		push(rt, nl, nr);
-		return merge(query(l, r, nl, nm, lc), query(l, r, nm+1, nr, rc));
-	}
-	
-	T query(int l, int r){
-		return query(l, r, LS, RS, 1);
-	}
-#undef lc
-#undef rc
-#undef nm
 } ST;
 
+
 int main(){
-	
-	ST.build();
+	ST.build(0, 5);
 	ST.update(1, 2, 4);
 	ST.update(2, 5, 1);
 	print(ST.query(2, 3));
-	
-	return 0;
 }

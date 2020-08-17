@@ -41,7 +41,7 @@ struct node{
 		pre = max(l->pre, l->sum + r->pre);
 		suf = max(r->suf, l->suf + r->sum);
 	}
-	node *copy(){
+	node *copy(){ // copy of a node during query (so that deletion of tmp nodes does not remove "real" nodes)
 		node *ret = new node(*this);
 		ret->l = ret->r = 0;
 		return ret;

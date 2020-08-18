@@ -26,7 +26,7 @@ namespace fwht{
 		for(int len = 1; len < n; len *= 2){
 			for(int pos = 0; pos < n; pos += len*2){
 				for(int i = 0; i < len; i++){
-					// replace values v[pos+i] v[pos+1+len] with their product with T_2
+					// replace values v[pos+i] v[pos+i+len] with their product with T_2
 					T a = v[pos+i];
 					T b = v[pos+i+len];
 					v[pos+i] = w*a+x*b;
@@ -37,10 +37,10 @@ namespace fwht{
 	}
 	void invgo(vector<T> &v){
 		int n = size(v);
-		for (int len = 1; len < n; len*= 2) {
-			for (int pos = 0; pos < n; pos+= len * 2) {
-				for (int i = 0; i < len; ++i) {
-					// replace values v[pos+i] v[pos+1+len] with their product with the inverse of T_2
+		for(int len = 1; len < n; len *= 2){
+			for(int pos = 0; pos < n; pos += len*2){
+				for(int i = 0; i < len; ++i) {
+					// replace values v[pos+i] v[pos+i+len] with their product with the inverse of T_2
 					T a = v[pos+i];
 					T b = v[pos+i+len];
 					v[pos+i] = (z*a-y*b)/det;
@@ -53,8 +53,7 @@ namespace fwht{
 		int n = size(va)+size(vb)-1;
 		while(n&(n-1)) n++;
 		va.resize(n), vb.resize(n);
-		go(va);
-		go(vb);
+		go(va); go(vb);
 		for(int i = 0; i < n; i++)
 			va[i] *= vb[i];
 		invgo(va);

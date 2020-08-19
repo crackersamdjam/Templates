@@ -5,24 +5,15 @@ const int MM = 1e5+5;
 
 struct LinkCut {
 	struct node{
-		int p = 0, ch[2] = {0, 0}, pp = 0, sz = 0;
+		int p = 0, ch[2] = {0, 0}, pp = 0, sz = 1;
 		bool flip = 0, fix = 0;
 		ll val = 0, lp = 0, fixv = 0, max = INT_MIN, min = INT_MAX;
 		ll sum = 0;
-	};
-	vector<node> T;
-	int ptr;
+	} T[MM];
 	
-	LinkCut(int n): T(n+1){ }
-	
-	int newnode(int v){
-		ptr++;
-		T[ptr].val = v;
-		T[ptr].sz = 1;
-		return ptr;
+	LinkCut(){
+		T[0].sz = 0;
 	}
-	
-	// SPLAY TREE OPERATIONS START
 	
 	int dir(int x, int y){ //which ch[?] y is of x
 		return T[x].ch[1] == y;
@@ -93,9 +84,8 @@ struct LinkCut {
 			else
 				rotate(x, dy), rotate(x, dx); // zig zig
 		}
+		push(x); pull(x);
 	}
-	
-	// SPLAY TREE OPERATIONS END
 	
 	void makeroot(int u){
 		access(u);
@@ -179,7 +169,7 @@ struct LinkCut {
 		cut(x, T[x].ch[0]);
 		link(x, y);
 	}
-};
+} LCT;
 
 int n, m;
 ll a[MM];
@@ -193,7 +183,6 @@ int main(){
 	cin.tie(0);
 	cout.tie(0);
 	cin>>n>>m;
-	LinkCut LCT(n+m+5);
 	for(int i = 1; i <= n; i++){
 		cin>>a[i];
 		LCT.update(i, i, 1, a[i]);

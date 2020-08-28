@@ -8,3 +8,8 @@ gen2.cpp
 in
 out
 err
+fast
+slow
+gen
+out1
+out2

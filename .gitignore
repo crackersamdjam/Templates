@@ -4,3 +4,8 @@ CMakeLists.txt
 !.gitignore
 !.gitattributes
 test.cpp
+slow.cpp
+gen2.cpp
+in
+out
+err

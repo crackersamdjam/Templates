@@ -1,9 +1,9 @@
 #!/bin/bash
-g++ fast.cpp -DONLINE_JUDGE -DSTRESSTEST --std=c++17 -O2 -o fast || { echo 'fast comp failed'; exit 1;}
+g++ test.cpp -DONLINE_JUDGE -DSTRESSTEST --std=c++17 -O2 -o fast || { echo 'fast comp failed'; exit 1;}
 g++ slow.cpp --std=c++17 -O2 -o slow || { echo 'slow comp failed'; exit 1;}
-g++ gen.cpp --std=c++17 -O2 -o gen || { echo 'gen comp failed'; exit 1;}
+g++ gen2.cpp --std=c++17 -O2 -o gen || { echo 'gen comp failed'; exit 1;}
 
-for((i=1;i<=100;++i)); do
+for((i=1;;++i)); do
 	echo $i
 	./gen $i > in
 	./fast < in > out1 || { echo 'fast run failed'; break;}

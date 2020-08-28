@@ -1,20 +1,22 @@
+// https://ccoj.ca/problem/fwht1
 #include <bits/stdc++.h>
 #define all(x) (x).begin(), (x).end()
-#define gc getchar_unlocked()
-#define pc(x) putchar_unlocked(x)
-template<typename T> void scan(T &x){x = 0;bool _=0;T c=gc;_=c==45;c=_?gc:c;while(c<48||c>57)c=gc;for(;c<48||c>57;c=gc);for(;c>47&&c<58;c=gc)x=(x<<3)+(x<<1)+(c&15);x=_?-x:x;}
-template<typename T> void printn(T n){bool _=0;_=n<0;n=_?-n:n;char snum[65];int i=0;do{snum[i++]=n%10+48;n/= 10;}while(n);--i;if (_)pc(45);while(i>=0)pc(snum[i--]);}
-template<typename First, typename ... Ints> void scan(First &arg, Ints&... rest){scan(arg);scan(rest...);}
-template<typename T> void print(T n){printn(n);pc(10);}
-template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
-
 using namespace std;
-namespace fwht{
-	using T = int;
+using ll = long long;
+const ll mod = 1e9+9;
+
+ll gcd(ll gcd_a, ll gcd_b){return gcd_b == 0 ? gcd_a : gcd(gcd_b, gcd_a % gcd_b);}
+ll fpow(ll fpow_b, ll fpow_exp, ll fpow_mod){if(fpow_exp == 0) return 1;ll t = fpow(fpow_b,fpow_exp/2,fpow_mod);if(fpow_exp&1) return t*t%fpow_mod*fpow_b%fpow_mod;return t*t%fpow_mod;}
+ll divmod(ll divmod_i, ll divmod_j, ll divmod_mod){divmod_i%=divmod_mod,divmod_j%=divmod_mod;return divmod_i*fpow(divmod_j,divmod_mod-2,divmod_mod)%divmod_mod;}
+
+struct fwht{
+	using T = ll;
+	T w, x, y, z;
+	fwht(T w, T x, T y, T z): w(w), x(x), y(y), z(z) {}
 //	const T w = 1, x = 1, y = 1, z = -1;
-	const T w = 1, x = 1, y = 1, z = 0;
+//	const T w = 1, x = 1, y = 1, z = 0;
 //	const T w = 0, x = 1, y = 1, z = 1;
-	const T det = w*z-x*y;
+	const T det = divmod(1, w*z-x*y, mod);
 	// calculate transform matrix http://serbanology.com/show_article.php?art=A%20Bitwise%20Convolution%20Tutorial
 	// fwht::mul in input vectors A, B and output vector C, v[i] = [# of ways / probability/ any value of type T] to get a mask of i
 	// fwht can be used for bitwise operators
@@ -30,8 +32,8 @@ namespace fwht{
 					// replace values v[pos+i] v[pos+i+len] with their product with T_2
 					T a = v[pos+i];
 					T b = v[pos+i+len];
-					v[pos+i] = w*a+x*b;
-					v[pos+i+len] = y*a+z*b;
+					v[pos+i] = (w*a+x*b)%mod;
+					v[pos+i+len] = (y*a+z*b)%mod;
 				}
 			}
 		}
@@ -40,12 +42,12 @@ namespace fwht{
 		int n = size(v);
 		for(int len = 1; len < n; len *= 2){
 			for(int pos = 0; pos < n; pos += len*2){
-				for(int i = 0; i < len; ++i) {
+				for(int i = 0; i < len; i++){
 					// replace values v[pos+i] v[pos+i+len] with their product with the inverse of T_2
 					T a = v[pos+i];
 					T b = v[pos+i+len];
-					v[pos+i] = (z*a-y*b)/det;
-					v[pos+i+len] = (w*b-x*a)/det;
+					v[pos+i] = (z*a-y*b)%mod * det % mod;
+					v[pos+i+len] = (w*b-x*a)%mod * det % mod;
 				}
 			}
 		}
@@ -61,9 +63,28 @@ namespace fwht{
 	}
 };
 
+fwht *T;
+
 int main(){
-	vector<int> a = {1, 2}, b = {3, 4};
-	fwht::mul(a, b);
-	for(int i: a)
-		print(i);
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	int k, n; cin>>k>>n;
+	if(k == 1)
+		T = new fwht(1, 1, 1, -1);
+	else if(k == 2)
+		T = new fwht(1, 1, 1, 0);
+	else if(k == 3)
+		T = new fwht(0, 1, 1, 1);
+	else abort();
+	
+	vector<ll> a(n), b(n);
+	for(int i = 0; i < n; i++)
+		cin>>a[i];
+	for(int i = 0; i < n; i++)
+		cin>>b[i];
+	T->mul(a, b);
+	for(int i = 0; i < 2*n; i++){
+		if(a[i] < 0) a[i] += mod;
+		cout<<a[i]<<' ';
+	}
 }

@@ -20,8 +20,8 @@ const int MM = 4e5+5;
 struct node{
 	T val; L lp; int sz;
 	inline void apply(L v){
-		val += v;
 		// val += v*sz; range sum
+		val += v;
 		lp += v;
 	}
 };
@@ -41,18 +41,20 @@ struct segtree{
 	}
 	
 	inline void push(int rt, int nl, int nr){ // node with lazy val means yet to push to children (but updated itself)
-		if(nl == nr) return;
+		if(nl == nr or tree[rt].lp == DEFL) return;
 		L &val = tree[rt].lp; tree[lc].apply(val); tree[rc].apply(val); val = DEFL;
 	}
 	
-	void build(int _LS, int _RS){ build(LS = _LS, RS = _RS, 1);} void build(int nl, int nr, int rt){
+	void build(int _LS, int _RS){ build(LS = _LS, RS = _RS, 1); }
+	void build(int nl, int nr, int rt){
 		tree[rt].val = DEF;
 		tree[rt].lp = DEFL;
 		tree[rt].sz = nr-nl+1;
 		if(nl == nr) return; build(nl, nm, lc); build(nm+1, nr, rc); pull(rt);
 	}
 	
-	void update(int l, int r, L val){ update(l, r, val, LS, RS, 1);} void update(int l, int r, L val, int nl, int nr, int rt){
+	void update(int l, int r, L val){ update(l, r, val, LS, RS, 1); }
+	void update(int l, int r, L val, int nl, int nr, int rt){
 		if(r < nl || l > nr) return;
 		if(l <= nl && r >= nr){
 			tree[rt].apply(val);
@@ -61,7 +63,8 @@ struct segtree{
 		push(rt, nl, nr); update(l, r, val, nl, nm, lc); update(l, r, val, nm+1, nr, rc); pull(rt);
 	}
 	
-	T query(int l, int r){ return query(l, r, LS, RS, 1);} T query(int l, int r, int nl, int nr, int rt){
+	T query(int l, int r){ return query(l, r, LS, RS, 1); }
+	T query(int l, int r, int nl, int nr, int rt){
 		if(r < nl || l > nr) return DEF;
 		if(l <= nl && r >= nr) return tree[rt].val;
 		push(rt, nl, nr); return merge(query(l, r, nl, nm, lc), query(l, r, nm+1, nr, rc));

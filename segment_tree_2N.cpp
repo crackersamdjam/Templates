@@ -1,3 +1,4 @@
+// https://dmoj.ca/problem/lazy
 #include <bits/stdc++.h>
 #define all(x) (x).begin(), (x).end()
 #define gc getchar()

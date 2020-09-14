@@ -24,10 +24,10 @@ void pull(int x){
 	T[x].sz = 1+T[lc].sz+T[rc].sz;
 }
 
-// >= key
+// >= key goes to right
 void split(int x, int key, int &l, int &r){
 	if(!x) l = r = 0;
-	else if(T[x].key > key){
+	else if(T[x].key >= key){
 		split(lc, key, l, lc);
 		r = x;
 	}
@@ -118,8 +118,5 @@ int main(){
 			cout<<(last=r)<<'\n';;
 		}
 	}
-
 	out(rt);
-	
-	return 0;
 }

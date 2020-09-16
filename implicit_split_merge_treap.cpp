@@ -1,14 +1,21 @@
+// https://dmoj.ca/problem/acc1p1
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 constexpr int MM = 2e5+5;
 
-mt19937 g1(time(0));
-int randint(int a, int b){return uniform_int_distribution<int>(a, b)(g1);}
+//mt19937_64 g(chrono::steady_clock::now().time_since_epoch().count());
+//mt19937_64 g((uint64_t) new char);
+mt19937_64 g(0);
+int randint(int l, int r){return uniform_int_distribution<int>(l, r)(g);}
+ll randll(ll l, ll r){return uniform_int_distribution<ll>(l, r)(g);}
 
 #define l T[x].lc
 #define r T[x].rc
+
 struct node{
-	int pr = randint(0, INT_MAX), val = 0, sz = 0, max = 0, lv = 0, rv = 0, flip = 0;
+	ll pr = g();
+	int val = 0, sz = 0, max = 0, lv = 0, rv = 0, flip = 0;
 	int lc = 0, rc = 0;
 } T[MM];
 
@@ -115,6 +122,4 @@ int main(){
 		}
 //		out(rt); cout<<'\n';
 	}
-	
-	return 0;
 }

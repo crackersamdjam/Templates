@@ -1,3 +1,5 @@
+// this is code for gcd
+// todo: make template structs like: https://dmoj.ca/src/1540866
 #include <bits/stdc++.h>
 #define all(x) (x).begin(), (x).end()
 #define gc getchar_unlocked()
@@ -11,17 +13,20 @@ template<typename First, typename ... Ints> void print(First arg, Ints... rest){
 using namespace std;
 using ll = long long;
 
-std::mt19937 gen(time(0));
-std::uniform_int_distribution<int> dis;
+//mt19937_64 g(chrono::steady_clock::now().time_since_epoch().count());
+//mt19937_64 g((uint64_t) new char);
+mt19937_64 g(0);
+int randint(int l, int r){return uniform_int_distribution<int>(l, r)(g);}
+ll randll(ll l, ll r){return uniform_int_distribution<ll>(l, r)(g);}
 
 struct tnode{
-	int key, pr;
-	ll val, gcd;
+	int key;
+	ll pr, val, gcd;
 	tnode *l, *r;
 	tnode(int key, ll val){
 		this->key = key;
-	   this->val = this->gcd = val;
-	   pr = dis(gen);
+		this->val = this->gcd = val;
+		pr = g();
 	}
 };
 
@@ -95,12 +100,3 @@ ll index(tnode *cur, int k){
 		return index(cur->l, k);
 	return index(cur->r, k);
 }
-
-/*
- * todo:
- * namespace --> struct functions
- * remove function
- * order statistics
- * https://dmoj.ca/src/1540866
- * https://cp-algorithms.com/data_structures/treap.html
- */

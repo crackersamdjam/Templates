@@ -1,16 +1,23 @@
+// https://dmoj.ca/problem/ds4
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 const int MM = 6e5+5;
 
-mt19937 g(time(0));
-int randint(){ return uniform_int_distribution<int>(0, INT_MAX)(g); }
+//mt19937_64 g(chrono::steady_clock::now().time_since_epoch().count());
+//mt19937_64 g((uint64_t) new char);
+mt19937_64 g(0);
+int randint(int l, int r){return uniform_int_distribution<int>(l, r)(g);}
+ll randll(ll l, ll r){return uniform_int_distribution<ll>(l, r)(g);}
 
-struct node{
-	int l = 0, r = 0, p = 0, pr = randint(), key = 0, sz = 0;
-	//here val == key
-} T[MM];
 #define lc T[x].l
 #define rc T[x].r
+
+struct node{
+	ll pr = g();
+	int l = 0, r = 0, key = 0, sz = 0;
+	// here val == key
+} T[MM];
 
 int ptr;
 
@@ -24,7 +31,7 @@ void pull(int x){
 	T[x].sz = 1+T[lc].sz+T[rc].sz;
 }
 
-// >= key goes to right
+// >= key
 void split(int x, int key, int &l, int &r){
 	if(!x) l = r = 0;
 	else if(T[x].key >= key){
@@ -93,14 +100,12 @@ int main(){
 	while(m--){
 		cin>>op>>v;
 		v ^= last;
-		// cout<<op<<' '<<v<<endl;
 		if(op == 'I'){
 			split(rt, v, rt, rs);
 			merge(rt, rt, next(v));
 			merge(rt, rt, rs);
 		}
 		if(op == 'R'){
-			v--;
 			split(rt, v+1, rt, rs);
 			split(rt, v, rt, ls);
 			merge(ls, T[ls].l, T[ls].r);
@@ -108,8 +113,7 @@ int main(){
 			merge(rt, rt, rs);
 		}
 		if(op == 'S'){
-			v--;
-			cout<<(last=kth(rt, v))<<'\n';
+			cout<<(last=kth(rt, v-1))<<'\n';
 		}
 		if(op == 'L'){
 			int r = ord(rt, v);

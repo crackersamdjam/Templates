@@ -34,7 +34,7 @@ inline void upd(tnode *rt){
 	if(rt) rt->gcd = std::__gcd(rt->l ? rt->l->gcd : 0, std::__gcd(rt->val, rt->r ? rt->r->gcd : 0));
 }
 
-// >= key goes to right
+// >= key goes to rs
 void split(tnode *cur, int key, tnode *&l, tnode *&r){
 	if(!cur){
 		l = r = nullptr;

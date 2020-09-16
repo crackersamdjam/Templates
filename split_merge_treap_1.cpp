@@ -31,7 +31,7 @@ void pull(int x){
 	T[x].sz = 1+T[lc].sz+T[rc].sz;
 }
 
-// >= key
+// >= key goes to rs
 void split(int x, int key, int &l, int &r){
 	if(!x) l = r = 0;
 	else if(T[x].key >= key){

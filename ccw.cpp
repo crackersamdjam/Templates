@@ -3,7 +3,7 @@ inline T vec(T a, T b){
     return make_pair(b.first-a.first,b.second-a.second);
 }
 template<typename T>
-inline ll cross(T a, T b){
+inline T cross(T a, T b){
     return a.first*b.second-a.second*b.first;
 }
 template<typename T>

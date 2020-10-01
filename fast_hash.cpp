@@ -36,9 +36,9 @@ int main(){
 		ll lv = 0, rv = 0, ans = -1;
 		
 		for(int i = 0; i < min(s.size(), t.size()); i++){
-			lv = s[s.size()-1-i]*p[i] % mod + lv;
+			lv = (s[s.size()-1-i]*p[i] % mod) + lv;
 			if(lv >= mod) lv -= mod;
-			rv = rv*base % mod + t[i];
+			rv = (rv*base % mod) + t[i];
 			if(rv >= mod) rv -= mod;
 			if(lv == rv)
 				ans = i;

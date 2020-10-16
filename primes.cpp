@@ -1,8 +1,4 @@
-// https://dmoj.ca/problem/bf3hard
-// Source: https://github.com/wesley-a-leung/Resources/blob/master/Content/C++/math/Primes.h
-// Determines whether N is prime using the Miller Rabin Primality Test
-// Time Complexity: iterations * time complexity of powMod
-// Memory Complexity: O(iterations)
+// https://cboj.ca/problem/factor2
 #include <bits/stdc++.h>
 #define all(x) (x).begin(), (x).end()
 #define gc getchar()
@@ -35,7 +31,8 @@ template<class T, class U> T fpow(T base, U pow, T mod){
 	return x;
 }
 
-template<class T> bool prime(T N, int iterations = 7){
+// O(iterations * complexity of fpow)
+template<class T> bool isprime(T N, int iterations = 7){
 	if(N < 2 or N%6%4 != 1)
 		return (N|1) == 3;
 	vector<T> A = {2, 325, 9375, 28178, 450775, 9780504, 1795265022};
@@ -56,10 +53,31 @@ template<class T> bool prime(T N, int iterations = 7){
 	return 1;
 }
 
+template<class T> T count_divisors(T N){
+	ll ret = 1, m = cbrtl(N)+1;
+	for(ll i = 2; i <= m; i++){
+		ll cnt = 0;
+		while(N%i == 0){
+			N /= i;
+			cnt++;
+		}
+		ret *= cnt+1;
+	}
+	// N is now either 1, p, pq, or p^2
+	if(N > 1){
+		if(isprime(N))
+			ret *= 2;
+		else{
+			ll p = sqrtl(N);
+			if(p*p == N) ret *= 3;
+			else ret *= 4;
+		}
+	}
+	return ret;
+}
+
 int main(){
 	ll n;
 	scan(n);
-	while(!prime(n))
-		n++;
-	print(n);
+	print(count_divisors(n));
 }

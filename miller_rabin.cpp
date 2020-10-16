@@ -14,14 +14,13 @@ template<typename T> void print(T n){printn(n);pc(10);}
 template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
 
 using namespace std;
-using ll = unsigned long long;
-using lll = __int128;
+using ll = __int128;
 
 //mt19937_64 g(chrono::steady_clock::now().time_since_epoch().count());
 //mt19937_64 g((uint64_t) new char);
 mt19937_64 g(0);
 int randint(int l, int r){return uniform_int_distribution<int>(l, r)(g);}
-ll randll(ll l, ll r){return uniform_int_distribution<ll>(l, r)(g);}
+long long randl(long long l, long long r){return uniform_int_distribution<long long>(l, r)(g);}
 
 template<class T> T mulMod(T a, T b, T mod){
 	return a*b%mod;
@@ -58,7 +57,7 @@ template<class T> bool prime(T N, int iterations = 7){
 }
 
 int main(){
-	lll n;
+	ll n;
 	scan(n);
 	while(!prime(n))
 		n++;

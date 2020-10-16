@@ -1,80 +1,84 @@
-// https://wcipeg.com/problem/segtree
-
+// https://dmoj.ca/problem/ioi05p3
 #include <bits/stdc++.h>
+#define all(x) (x).begin(), (x).end()
+#define gc getchar()
+#define pc(x) putchar(x)
+template<typename T> void scan(T &x){x = 0;bool _=0;T c=gc;_=c==45;c=_?gc:c;while(c<48||c>57)c=gc;for(;c<48||c>57;c=gc);for(;c>47&&c<58;c=gc)x=(x<<3)+(x<<1)+(c&15);x=_?-x:x;}
+template<typename T> void printn(T n){bool _=0;_=n<0;n=_?-n:n;char snum[65];int i=0;do{snum[i++]=char(n%10+48);n/= 10;}while(n);--i;if (_)pc(45);while(i>=0)pc(snum[i--]);}
+template<typename First, typename ... Ints> void scan(First &arg, Ints&... rest){scan(arg);scan(rest...);}
+template<typename T> void print(T n){printn(n);pc(10);}
+template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
+
 using namespace std;
+#define nm ((nl+nr)/2)
 
-struct SparseSeg {
-	// Seg Parameters
-	using Data = int; // Data type
-	static inline Data Merge(Data a, Data b) { return min(a, b); } // Merge function
-	static const Data DEFAULT = 0x3f3f3f3f; // Default value (used in query func)
+const int MM = 5e6;
 
-	struct SegNode {
-		SegNode *l, *r;
-		Data value;
+struct node{
+	int lp = 0, sum = 0, max = 0, lcp = 0, rcp = 0;
+	bool up = 0;
+	void pull();
+	void push(int nl, int nr);
+	int query(int nl, int nr, int h);
+	void update(int nl, int nr, int l, int r, int v);
+	void apply(int val, int k){
+		sum = max = val*k;
+		lp = val;
+		up = 1;
+	}
+} nodes[MM];
+int ptr = 1;
 
-		SegNode() : l(nullptr), r(nullptr), value(0) {}
-		~SegNode() {
-			delete l;
-			delete r;
-			l = r = nullptr;
-		}
+void node::pull(){
+	sum = nodes[lcp].sum + nodes[rcp].sum;
+	max = std::max(nodes[lcp].max, nodes[lcp].sum + nodes[rcp].max);
+}
 
-		Data update(SegNode *&rt, int l, int r, int q, Data v) {
-			if (!rt) rt = new SegNode;
-			if (l == q && r == q) return rt->value = v;
-			if (l > q || r < q) return rt->value;
-			int mid = (l + r) >> 1;
-			return rt->value = Merge(update(rt->l, l, mid, q, v), update(rt->r, mid + 1, r, q, v));
-		}
+void node::push(int nl, int nr){
+	if(nl != nr && !lcp){
+		lcp = ++ptr;
+		rcp = ++ptr;
+	}
+	if(up and nl != nr){
+		nodes[lcp].apply(lp, nm-nl+1);
+		nodes[rcp].apply(lp, nr-nm);
+		up = lp = 0;
+	}
+}
 
-		Data query(SegNode *&rt, int l, int r, int ql, int qr) {
-			if (!rt) return DEFAULT;
-			if (l >= ql && r <= qr) return rt->value;
-			if (l > qr || r < ql) return DEFAULT;
-			int mid = (l + r) >> 1;
-			return Merge(query(rt->l, l, mid, ql, qr), query(rt->r, mid + 1, r, ql, qr));
-		}
-	};
+int node::query(int nl, int nr, int h){
+	if(nl == nr)
+		return nl-(max > h);
+	push(nl, nr);
+	if(nodes[lcp].max <= h)
+		return nodes[rcp].query(nm+1, nr, h-nodes[lcp].sum);
+	return nodes[lcp].query(nl, nm, h);
+}
 
-	// Just Some Driver Code
-	int N;
-	SegNode *root;
-
-	inline void init(int N0) { N = N0; root = nullptr; } // Initializes the DS
-	inline void reset() { delete root; root = nullptr; } // Resets the DS
-	inline void update(int q, Data v) { root->update(root, 1, N, q, v); }
-	inline Data query(int l, int r) { return root->query(root, 1, N, l, r); }
-};
-
-int N, Q;
-SparseSeg seg;
+void node::update(int nl, int nr, int l, int r, int v){
+	if(r < nl or nr < l)
+		return;
+	if(l <= nl and nr <= r){
+		apply(v, nr-nl+1);
+		return;
+	}
+	push(nl, nr);
+	nodes[lcp].update(nl, nm, l, r, v);
+	nodes[rcp].update(nm+1, nr, l, r, v);
+	pull();
+}
 
 int main(){
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-
-	cin >> N >> Q;
-	seg.init(N);
-
-	for (int i = 1; i <= N; i++) {
-		int X; cin >> X;
-		seg.update(i, X);
-	}
-
-	while (Q--) {
-		char T; int A; int B;
-		cin >> T >> A >> B;
-
-		if (T == 'Q') {
-			A++; B++;
-			cout << seg.query(A, B) << '\n';
+	int n, op, l, r, v, k;
+	scan(n);
+	while((op = gc) != 'E'){
+		if(op == 'I'){
+			scan(l, r, v);
+			nodes[1].update(0, n, l, r, v);
 		}
-		else {
-			A++;
-			seg.update(A, B);
+		else{
+			scan(k);
+			print(nodes[1].query(0, n, k));
 		}
 	}
-
-	return 0;
 }

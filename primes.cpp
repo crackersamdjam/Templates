@@ -18,18 +18,9 @@ mt19937_64 g(0);
 int randint(int l, int r){return uniform_int_distribution<int>(l, r)(g);}
 long long randl(long long l, long long r){return uniform_int_distribution<long long>(l, r)(g);}
 
-template<class T> T mulMod(T a, T b, T mod){
-	return a*b%mod;
-}
-
-template<class T, class U> T fpow(T base, U pow, T mod){
-	T x = 1;
-	for(; pow > 0; pow >>= 1){
-		if(pow&1) x = mulMod(x, base, mod);
-		base = mulMod(base, base, mod);
-	}
-	return x;
-}
+template<class T> T gcd(T _a, T _b){return _b == 0 ? _a : gcd(_b, _a%_b);}
+template<class T, class U> T fpow(T _base, U _pow, T _mod){_base %= _mod; T _x = 1; for(; _pow > 0; _pow >>= 1){ if(_pow&1) _x = _x*_base%_mod; _base = _base*_base%_mod;} return _x;}
+template<class T> T divmod(T _a, T _b, T _mod){return _a*fpow(_b, _mod-2, _mod)%_mod;}
 
 // O(iterations * complexity of fpow)
 template<class T> bool isprime(T N, int iterations = 7){
@@ -46,7 +37,7 @@ template<class T> bool isprime(T N, int iterations = 7){
 		T p = fpow(a%N, d, N);
 		int i = s;
 		while(p != 1 and p != N-1 and a%N and i--)
-			p = mulMod(p, p, N);
+			p = p*p%N;
 		if(p != N-1 and i != s)
 			return 0;
 	}
@@ -54,7 +45,7 @@ template<class T> bool isprime(T N, int iterations = 7){
 }
 
 template<class T> T count_divisors(T N){
-	ll ret = 1, m = cbrtl(N)+1;
+	ll ret = 1, m = cbrtl(N);
 	for(ll i = 2; i <= m; i++){
 		ll cnt = 0;
 		while(N%i == 0){

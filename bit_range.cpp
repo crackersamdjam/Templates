@@ -38,6 +38,9 @@ template<class T, int SZ> struct rbit{
 		T2.up(l, v*(l-1));
 		T2.up(r+1, -v*r);
 	}
+	void up(int l, T v){
+		up(l, l, v);
+	}
 };
 
 rbit<int, 10> T;

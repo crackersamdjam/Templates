@@ -12,12 +12,12 @@ using namespace std;
 
 template<class T, int SZ> struct bit{
 	T bit[SZ];
-	void up(int i, int v){
+	void up(int i, T v){
 		for(; i < SZ; i += i&-i)
 			bit[i] += v;
 	}
-	int qu(int i){
-		static int v;
+	T qu(int i){
+		static T v;
 		for(v = 0; i; i -= i&-i)
 			v += bit[i];
 		return v;

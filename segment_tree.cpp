@@ -69,6 +69,18 @@ struct segtree{
 		if(l <= nl && r >= nr) return tree[rt].val;
 		push(rt, nl, nr); return merge(query(l, r, nl, nm, lc), query(l, r, nm+1, nr, rc));
 	}
+	
+	// upper_bound (first point of failure)
+	// change k-tree[lc].val to whatever is needed
+	// int kth(T k){ return kth(k, LS, RS, 1);}
+	// int kth(T k, int nl, int nr, int rt){
+	// 	if(nl == nr)
+	// 		return nl;
+	// 	push(rt, nl, nr);
+	// 	if(k < tree[lc].val)
+	// 		return kth(k, nl, nm, lc);
+	// 	return kth(k-tree[lc].val, nm+1, nr, rc);
+	// }
 } ST;
 
 

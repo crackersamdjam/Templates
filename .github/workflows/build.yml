@@ -1,0 +1,42 @@
+name: build
+on: [push, pull_request]
+jobs:
+  check-lines:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check lines
+      run: find "." -type f -exec python3 Scripts/CheckLines.py {} +
+  compile-cpp11:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check versions
+      run: |
+        g++ --version
+    - name: Replace pragma once
+      run: find "." -name "*.cpp" -exec python3 Scripts/ReplacePragmas.py {} +
+    - name: Compile
+      run: find "." -name "*.cpp" -exec Scripts/Compile.sh "g++ -std=c++11 -Wall -Wextra -pedantic-errors -Werror -fsyntax-only" {} +
+  compile-cpp14:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check versions
+      run: |
+        g++ --version
+    - name: Replace pragma once
+      run: find "." -name "*.cpp" -exec python3 Scripts/ReplacePragmas.py {} +
+    - name: Compile
+      run: find "." -name "*.cpp" -exec Scripts/Compile.sh "g++ -std=c++14 -Wall -Wextra -pedantic-errors -Werror -fsyntax-only" {} +
+  compile-cpp17:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check versions
+      run: |
+        g++ --version
+    - name: Replace pragma once
+      run: find "." -name "*.cpp" -exec python3 Scripts/ReplacePragmas.py {} +
+    - name: Compile
+      run: find "." -name "*.cpp" -exec Scripts/Compile.sh "g++ -std=c++17 -Wall -Wextra -pedantic-errors -Werror -fsyntax-only" {} +

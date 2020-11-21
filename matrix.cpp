@@ -2,34 +2,38 @@
 using namespace std;
 using ll = long long;
 using T = long long;
-constexpr T mod = 1e9+7;
+constexpr T mod = 1e9+7, inf = LLONG_MAX/3;
 
 struct matrix{
 	int n, m;
 	vector<vector<T>> a;
-	matrix(int _n = 0, int _m = 0){
+	matrix(int _n = 0, int _m = 0, T val = 0){
 		n = _n, m = _m;
 		a.resize(n);
 		for(int i = 0; i < n; i++)
-			a[i].resize(m, 0);
+			a[i].resize(m, val);
 	}
 };
 
 struct vect{
 	int n;
 	vector<T> a;
-	vect(int _n = 0){
+	vect(int _n = 0, T val = 0){
 		n = _n;
-		a.resize(n, 0);
+		a.resize(n, val);
 	}
 };
+
+T merge(const T old, const T ls, const T rs){
+	return (old + ls*rs) % mod;
+}
 
 vect mul(const vect &va, const matrix &mb){
 	assert(va.n == mb.n);
 	vect vc(mb.m);
 	for(int i = 0; i < mb.m; i++){
 		for(int j = 0; j < mb.n; j++)
-			vc.a[i] = (vc.a[i] + va.a[j]*mb.a[j][i])%mod;
+			vc.a[i] = merge(vc.a[i], va.a[j], mb.a[j][i]);
 	}
 	return vc;
 }
@@ -38,10 +42,8 @@ matrix mul(const matrix &ma, const matrix &mb){
 	matrix c(ma.n, mb.m);
 	for(int i = 0; i < ma.n; i++){
 		for(int j = 0; j < mb.m; j++){
-			T t = 0;
 			for(int k = 0; k < ma.m; k++)
-				t = (t + ma.a[i][k] * mb.a[k][j]) % mod;
-			c.a[i][j] = t;
+				c.a[i][j] = merge(c.a[i][j], ma.a[i][k], mb.a[k][j]);
 		}
 	}
 	return c;

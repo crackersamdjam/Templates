@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 using T = long long;
 constexpr T mod = 1e9+7;
 
@@ -10,10 +11,30 @@ struct matrix{
 		n = _n, m = _m;
 		a.resize(n);
 		for(int i = 0; i < n; i++)
-			a[i].resize(m);
+			a[i].resize(m, 0);
 	}
 };
-matrix mul(matrix ma, matrix mb){
+
+struct vect{
+	int n;
+	vector<T> a;
+	vect(int _n = 0){
+		n = _n;
+		a.resize(n, 0);
+	}
+};
+
+vect mul(const vect &va, const matrix &mb){
+	assert(va.n == mb.n);
+	vect vc(mb.m);
+	for(int i = 0; i < mb.m; i++){
+		for(int j = 0; j < mb.n; j++)
+			vc.a[i] = (vc.a[i] + va.a[j]*mb.a[j][i])%mod;
+	}
+	return vc;
+}
+
+matrix mul(const matrix &ma, const matrix &mb){
 	matrix c(ma.n, mb.m);
 	for(int i = 0; i < ma.n; i++){
 		for(int j = 0; j < mb.m; j++){
@@ -36,9 +57,20 @@ matrix fpow(matrix m, T exp){
 	return ret;
 }
 
+vect fpow(vect res, matrix base, int exp){
+	assert(res.n == base.n);
+	while(1){
+		if(exp&1)
+			res = mul(res, base);
+		exp /= 2;
+		if(!exp) break;
+		base = mul(base, base);
+	}
+	return res;
+}
 
 int main(){
-	int n; T k;
+	int n; ll k;
 	cin >> n >> k;
 	matrix a(n, n);
 	for(int i = 0; i < n; i++){
@@ -46,15 +78,19 @@ int main(){
 			cin >> a.a[i][j];
 	}
 	a = fpow(a, k);
-	T res = 0;
-	for(int i = 0; i < n; i++){
-		for(int j = 0; j < n; j++){
-			res += a.a[i][j];
-			res %= mod;
-		}
-	}
+	cout << a.a[0][3] << '\n';
 	
-	cout << res;
-	
-	return 0;
+	vect st(n);
+	st.a[0] = 1;
+	st.a[1] = 1;
+	st = fpow(st, a, 10);
+	cout << st.a[4] <<'\n';
 }
+/*
+5 3
+0 1 0 0 0
+0 0 1 0 0
+0 0 0 1 0
+0 0 0 0 1
+0 0 0 0 1
+ */

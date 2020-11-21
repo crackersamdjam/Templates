@@ -72,8 +72,8 @@ struct segtree{
 	
 	// upper_bound (first point of failure)
 	// change k-tree[lc].val to whatever is needed
-	// int kth(T k){ return kth(k, LS, RS, 1);}
-	// int kth(T k, int nl, int nr, int rt){
+	// int kth(int k){ return kth(k, LS, RS, 1);}
+	// int kth(int k, int nl, int nr, int rt){
 	// 	if(nl == nr)
 	// 		return nl;
 	// 	push(rt, nl, nr);

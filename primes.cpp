@@ -1,4 +1,3 @@
-// https://cboj.ca/problem/factor2
 #include <bits/stdc++.h>
 #define all(x) (x).begin(), (x).end()
 #define gc getchar()
@@ -67,8 +66,58 @@ template<class T> T count_divisors(T N){
 	return ret;
 }
 
+// https://github.com/bqi343/USACO/blob/master/Implementations/content/number-theory%20(11.1)/Primality/Sieve.h
+// returns a boolean array of whether prime and a list of primes
+template<class T> pair<vector<bool>, vector<T>> fast_sieve(T N){
+	vector<bool> p(N+1, 1);
+	vector<T> primes = {2};
+	p[0] = p[1] = 0;
+	for(T i = 4; i <= N; i += 2)
+		p[i] = 0;
+	for(T i = 3; i*i <= N; i += 2)
+		if(p[i]) for(T j = i*i; j <= N; j += i*2)
+				p[j] = 0;
+	for(T i = 3; i <= N; i += 2)
+		if(p[i]) primes.emplace_back(i);
+	return {move(p), move(primes)};
+}
+
+// https://cp-algorithms.com/algebra/prime-sieve-linear.html
+// returns an array of the lowest prime factor (other than 1) of each integer and a list of primes
+template<class T> pair<vector<T>, vector<T>> linear_sieve(T N){
+	vector<T> low(N+1, 0);
+	vector<T> primes;
+	for(T i = 2; i <= N; i++){
+		if(!low[i])
+			low[i] = i, primes.emplace_back(i);
+		for(T j = 0; j < (T)size(primes) and primes[j] <= low[i] and i*primes[j] <= N; j++)
+			low[i*primes[j]] = primes[j];
+	}
+	return {move(low), move(primes)};
+}
+
 int main(){
-	ll n;
-	scan(n);
-	print(count_divisors(n));
+	// test primality checks on https://cboj.ca/problem/factor2
+	// ll n;
+	// scan(n);
+	// print(count_divisors(n));
+	
+	
+	// test sieves on https://dmoj.ca/problem/phantom1
+	// auto v = linear_sieve((__int128)1e6).first;
+	// auto v = fast_sieve((__int128)1e6).first;
+	// auto a = linear_sieve((__int128)1e6).second;
+	// int q;
+	// scan(q);
+	// while(q--){
+	// 	int l, r, ans = 0;
+	// 	scan(l, r);
+	// 	// for(int i = l; i < r; i++)
+	// 		// ans += v[i] == i;
+	// 	// for(int i = l; i < r; i++)
+	// 		// ans += v[i];
+	// 	for(auto i: a)
+	// 		ans += i >= l and i < r;
+	// 	cout<<ans<<'\n';
+	// }
 }

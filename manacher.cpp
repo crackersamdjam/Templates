@@ -1,61 +1,100 @@
 #include <bits/stdc++.h>
 #define all(x) (x).begin(), (x).end()
-#define gc getchar_unlocked()
-#define pc(x) putchar_unlocked(x)
+#define gc getchar()
+#define pc(x) putchar(x)
 template<typename T> void scan(T &x){x = 0;bool _=0;T c=gc;_=c==45;c=_?gc:c;while(c<48||c>57)c=gc;for(;c<48||c>57;c=gc);for(;c>47&&c<58;c=gc)x=(x<<3)+(x<<1)+(c&15);x=_?-x:x;}
-template<typename T> void printn(T n){bool _=0;_=n<0;n=_?-n:n;char snum[65];int i=0;do{snum[i++]=n%10+48;n/= 10;}while(n);--i;if (_)pc(45);while(i>=0)pc(snum[i--]);}
+template<typename T> void printn(T n){bool _=0;_=n<0;n=_?-n:n;char snum[65];int i=0;do{snum[i++]=char(n%10+48);n/= 10;}while(n);--i;if (_)pc(45);while(i>=0)pc(snum[i--]);}
 template<typename First, typename ... Ints> void scan(First &arg, Ints&... rest){scan(arg);scan(rest...);}
 template<typename T> void print(T n){printn(n);pc(10);}
 template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
 
 using namespace std;
-const int MM = 50008;
 
-int n, r[MM];
-char s[MM];
+// https://cp-algorithms.com/string/manacher.html
+pair<vector<int>, vector<int>> manacher(string s, bool front = 1, bool back = 1){
+	if(front) s = "@"+s;
+	if(back) s += "#";
+	int n = size(s);
+	vector<int> r1(n), r2(n); //radii of palindromes (1 odd, 2 even length)
+	
+	for(int i = 1, mx = 0, p = 0; i < n-1; i++){
+		r1[i] = (i >= mx) ? 1 : min(mx-i, r1[p*2-i]);
+		while(s[i-r1[i]] == s[i+r1[i]])
+			r1[i]++;
+		if(i+r1[i] > mx)
+			mx = i+r1[i], p = i;
+	}
+	for(int i = 1, mx = 0, p = 0; i < n-1; i++){
+		r2[i] = (i >= mx) ? 0 : min(mx-i, r2[p*2-i+2]);
+		while(s[i-r2[i] -1] == s[i+r2[i]])
+			r2[i]++;
+		if(i+r2[i] > mx)
+			mx = i+r2[i], p = i-1;
+	}
+	r1.pop_back();
+	r2.pop_back();
+	// not popping front for better performance
+	return {r1, r2};
+}
+
+// https://dmoj.ca/problem/vmss7wc15c2p2
+//int main(){
+//	int n; string s;
+//	ios_base::sync_with_stdio(0);
+//	cin.tie(0);
+//	cin>>n>>s;
+//	auto [v1, v2] = manacher(s);
+//	auto a = max_element(all(v1)), b = max_element(all(v2));
+//	if(*a*2-1 > *b*2){
+//		int l = a-v1.begin()-*a;
+//		cout<<s.substr(l, *a*2-1)<<'\n';
+//		cout<<*a*2-1<<'\n';
+//	}
+//	else{
+//		int l = b-v2.begin()-*b-1;
+//		cout<<s.substr(l, *b*2)<<'\n';
+//		cout<<*b*2<<'\n';
+//	}
+//}
+
+
+
+// https://dmoj.ca/problem/dmopc15c7p6
+using ll = long long;
+const int MM = 1e5+5;
+
+ll dp[MM], psa[MM], dif[MM], ans;
 
 int main(){
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	string s;
+	cin>> s;
+	s = " "+s;
+	int n = size(s);
+	auto [r, r2] = manacher(s);
 	
-	scanf("%d %s", &n, s+1);
-	
-	int m = n*2+1;
-	
-	for(int i = m; i; i--){
-		if(i&1)
-			s[i] = s[i>>1];
-		else
-			s[i] = '#';
-	}
-	s[1] = '@'; //stop from exending beyond
-	s[m+1] = '#';
-	
-	for(int i = 1, mx = 0, p = 0; i <= m; i++){
-		//cout<<i<<' '<<s[i]<<'\n';
-		if(i >= mx)
-			r[i] = 1;
-		else
-			r[i] = min(mx-i, r[p*2-i]);
+	for(int i = 2; i <= n; i++){
+		// for(int j = 0; j < r[i]; j++){
+		// 	dp[i+j] += 1;
+		// 	ans += dp[i-j-1];
+		// }
+		// for(int j = 0; j < r2[i]; j++){
+		// 	dp[i+j] += 1;
+		// 	ans += dp[i-j-2];
+		// }
+		dif[i]++;
+		dif[i+r[i]]--;
+		ans += psa[i-1] - psa[i-r[i]-1];
 		
-		//p*2 = leftend + rightend
-		//leftend + rightend-i reflects i across p
+		dif[i]++;
+		dif[i+r2[i]]--;
+		ans += psa[i-2] - psa[i-r2[i]-2];
 		
-		while(s[i-r[i]] == s[i+r[i]])
-			r[i]++;
-		if(i + r[i] > mx)
-			mx = i + r[i], p = i;
+		dif[i] += dif[i-1];
+		dp[i] = dp[i-1] + dif[i];
+		psa[i] = psa[i-1] + dp[i];
 	}
 	
-	int* st = max_element(r+1, r+n*2+1), ans = 0;
-	
-	for(int i = st-r-*st+1; i < st-r+*st; i++){
-		if(i%2)
-			pc(s[i]), ans++;
-	}
-	
-	pc(10);
-	
-	print(ans);
-	assert(ans == *st-1);
-	
-	return 0;
+	cout<<ans<<'\n';
 }

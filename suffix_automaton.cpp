@@ -1,5 +1,5 @@
 // overkill sol to https://atcoder.jp/contests/abc097/tasks/arc097_a
-// more functions https://github.com/boi343/USACO/blob/master/Implementations/content/strings%20(14)/Heavy/SuffixAutomaton.h
+// more functions https://github.com/bqi343/USACO/blob/master/Implementations/content/strings%20(14)/Heavy/SuffixAutomaton.h
 
 #include <bits/stdc++.h>
 using namespace std;

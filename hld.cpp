@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 #define all(x) (x).begin(), (x).end()
-#define gc getchar_unlocked()
-#define pc(x) putchar_unlocked(x)
-template<typename T> int size(const T &x){return int(x.size());}
+#define gc getchar()
+#define pc(x) putchar(x)
 template<typename T> void scan(T &x){x = 0;bool _=0;T c=gc;_=c==45;c=_?gc:c;while(c<48||c>57)c=gc;for(;c<48||c>57;c=gc);for(;c>47&&c<58;c=gc)x=(x<<3)+(x<<1)+(c&15);x=_?-x:x;}
-template<typename T> void printn(T n){bool _=0;_=n<0;n=_?-n:n;char snum[65];int i=0;do{snum[i++]=n%10+48;n/= 10;}while(n);--i;if (_)pc(45);while(i>=0)pc(snum[i--]);}
+template<typename T> void printn(T n){bool _=0;_=n<0;n=_?-n:n;char snum[65];int i=0;do{snum[i++]=char(n%10+48);n/= 10;}while(n);--i;if (_)pc(45);while(i>=0)pc(snum[i--]);}
 template<typename First, typename ... Ints> void scan(First &arg, Ints&... rest){scan(arg);scan(rest...);}
 template<typename T> void print(T n){printn(n);pc(10);}
 template<typename First, typename ... Ints> void print(First arg, Ints... rest){printn(arg);pc(32);print(rest...);}
@@ -86,7 +85,7 @@ struct segtree{
 
 int n, q;
 vector<int> adj[MM];
-int par[MM], dep[MM], heavy[MM], head[MM], pos[MM], ptr;
+int par[MM], dep[MM], heavy[MM], head[MM], in[MM], out[MM], ptr;
 
 int dfs(int cur, int pre){
 	int size = 1, maxsz = 0;
@@ -102,24 +101,27 @@ int dfs(int cur, int pre){
 	return size;
 }
 
-void decompose(int cur, int id){
-	head[cur] = id, pos[cur] = ++ptr;
-	if(~heavy[cur])
-		decompose(heavy[cur], id);
+void hld(int cur, int hd){
+	head[cur] = hd;
+	in[cur] = ++ptr;
+	
+	if(heavy[cur])
+		hld(heavy[cur], hd);
 	for(int u: adj[cur]){
-		if (u != par[cur] && u != heavy[cur])
-			decompose(u, u);
+		if(u != par[cur] && u != heavy[cur])
+			hld(u, u);
 	}
+	out[cur] = ptr;
 }
 
-void init(){
-	memset(heavy, -1, sizeof heavy);
-	ptr = 0;
-	adj[0].push_back(1);
-	adj[1].push_back(0);
-	dfs(0, -1);
-	decompose(1, 1);
-	ST.build();
+int getlca(int a, int b){
+	while(head[a] != head[b]){
+		if(dep[head[a]] < dep[head[b]])
+			b = par[head[b]];
+		else
+			a = par[head[a]];
+	}
+	return dep[a] < dep[b] ? a : b;
 }
 
 T query(int a, int b){
@@ -127,12 +129,12 @@ T query(int a, int b){
 	for(; head[a] != head[b]; b = par[head[b]]){
 		if(dep[head[a]] > dep[head[b]])
 			swap(a, b);
-		res += ST.query(pos[head[b]], pos[b]);
+		res += ST.query(in[head[b]], in[b]);
 	}
 	if(a != b){
 		if(dep[a] > dep[b])
 			swap(a, b);
-		res += ST.query(pos[a]+1, pos[b]);
+		res += ST.query(in[a]+1, in[b]);
 	}
 	return res;
 }
@@ -141,13 +143,13 @@ void update(int a, int b, L v){
 	for(; head[a] != head[b]; b = par[head[b]]){
 		if(dep[head[a]] > dep[head[b]])
 			swap(a, b);
-		int l = pos[head[b]], r = pos[b];
+		int l = in[head[b]], r = in[b];
 		ST.update(l, r, v);
 	}
 	if(a != b){
 		if(dep[a] > dep[b])
 			swap(a, b);
-		ST.update(pos[a]+1, pos[b], v);
+		ST.update(in[a]+1, in[b], v);
 	}
 }
 
@@ -162,14 +164,43 @@ int main(){
 		adj[b].emplace_back(a);
 	}
 	
-	init();
+	dfs(1, 0);
+	hld(1, 1);
+	ST.build();
 	
 	for(int i = 0,a,b; i < q; i++){
 		char c;
 		cin>>c>>a>>b;
 		if(c == 'P')
 			update(a, b, 1);
+		else if(c == 'L')
+			cout<<getlca(a, b)<<'\n';
 		else
 			cout<<query(a, b)<<'\n';
 	}
 }
+/*
+current code:
+P adds 1 to each edge on path
+L gets lca
+Q queries sum of edges on path
+
+5 7
+1 2
+2 3
+2 4
+1 5
+L 3 4
+L 1 5
+P 1 3
+Q 1 2
+P 5 4
+Q 1 2
+Q 5 4
+
+2
+1
+1
+2
+4
+*/

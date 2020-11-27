@@ -1,13 +1,11 @@
 #include <bits/stdc++.h>
-#define sz(x) ((int)(x).size())
 using namespace std;
 
-// pi[i] = length of longest suffix (ending at i) with the same prefix as s
+// pi[i] = length of longest proper prefix equal to suffix of s ending at i ( s.substr(0, i+1) )
 vector<int> kmp(string s){
-	vector<int> pi(sz(s));
+	vector<int> pi(size(s));
 	pi[0] = 0;
-	for(int i = 1; i < sz(s); i++){
-		int j = pi[i-1];
+	for(int i = 1, j = 0; i < size(s); i++){
 		while(j and s[i] != s[j])
 			j = pi[j-1];
 		if(s[i] == s[j])
@@ -18,12 +16,12 @@ vector<int> kmp(string s){
 }
 
 vector<int> kmp2(string s, const string &t){
-	int sub = sz(s);
+	int sub = size(s);
 	s = s+"#"+t;
 	
-	vector<int> pi(sz(s)), ret(sz(t));
+	vector<int> pi(size(s)), ret(size(t));
 	pi[0] = 0;
-	for(int i = 1; i < sz(s); i++){
+	for(int i = 1; i < size(s); i++){
 		int j = pi[i-1];
 		while(j and s[i] != s[j])
 			j = pi[j-1];
@@ -36,7 +34,7 @@ vector<int> kmp2(string s, const string &t){
 		//	cout<<i-sub-sub<<' ';
 		//}
 	}
-	for(int i = 0; i < sz(t); i++)
+	for(int i = 0; i < size(t); i++)
 		ret[i] = pi[sub+1+i];
 	return ret;
 }

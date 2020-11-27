@@ -3,28 +3,31 @@ using namespace std;
 
 using T = long long;
 
-T gcd(T gcd_a, T gcd_b){return gcd_b == 0 ? gcd_a : gcd(gcd_b, gcd_a % gcd_b);}
-T fpow(T fpow_b, T fpow_exp, T fpow_mod){if(fpow_exp == 0) return 1;T t = fpow(fpow_b,fpow_exp/2,fpow_mod);if(fpow_exp&1) return t*t%fpow_mod*fpow_b%fpow_mod;return t*t%fpow_mod;}
-T divmod(T divmod_i, T divmod_j, T divmod_mod){divmod_i%=divmod_mod,divmod_j%=divmod_mod;return divmod_i*fpow(divmod_j,divmod_mod-2,divmod_mod)%divmod_mod;}
+template<class T> T gcd(T _a, T _b){return _b == 0 ? _a : gcd(_b, _a%_b);}
+template<class T, class U> T fpow(T _base, U _pow, T _mod){_base %= _mod; T _x = 1; for(; _pow > 0; _pow >>= 1){ if(_pow&1) _x = _x*_base%_mod; _base = _base*_base%_mod;} return _x;}
+template<class T> T divmod(T _a, T _b, T _mod){return _a*fpow(_b, _mod-2, _mod)%_mod;}
 
-mt19937 g1(time(0));
-int randint(int a, int b){return uniform_int_distribution<int>(a, b)(g1);}
-T randlong(T a,T b){return uniform_int_distribution<T>(a, b)(g1);}
+//mt19937_64 g(chrono::steady_clock::now().time_since_epoch().count());
+//mt19937_64 g((uint64_t) new char);
+mt19937_64 g(0);
+int randint(int l, int r){return uniform_int_distribution<int>(l, r)(g);}
+long long randl(long long l, long long r){return uniform_int_distribution<long long>(l, r)(g);}
+T randt(T a, T b){return uniform_int_distribution<T>(a, b)(g);}
 
-T exgcd(T a, T b, T &x, T &y){
+T eea(T a, T b, T &x, T &y){
 	if(a == 0){
 		x = 0, y = 1;
 		return b;
 	}
 	T x1, y1;
-	T d = exgcd(b % a, a, x1, y1);
+	T d = eea(b % a, a, x1, y1);
 	x = y1 - (b / a) * x1;
 	y = x1;
 	return d;
 }
 
 bool diophantine(T a, T b, T c, T &x0, T &y0, T &g){
-	g = exgcd(abs(a), abs(b), x0, y0);
+	g = eea(abs(a), abs(b), x0, y0);
 	if(c % g)
 		return 0;
 	x0 *= c / g;

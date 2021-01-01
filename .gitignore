@@ -6,4 +6,6 @@ CMakeLists.txt
 !.github
 Content/test.cpp
 Content/in
-
+Content/out
+Content/err
+Content/fullerr

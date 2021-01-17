@@ -6,3 +6,5 @@ Algorithm and data structure templates for competitive programming.
 - Python scripts run in Python 3
 - Shell scripts run in Bash
 
+Todo:
+- get everything to compile

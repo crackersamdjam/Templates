@@ -1,0 +1,11 @@
+# https://github.com/wesley-a-leung/Resources/blob/master/.github/workflows/build.yml
+# Thanks Wesley
+name: build
+on: [push, pull_request]
+jobs:
+  check-lines:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check lines
+        run: find "content/" -type f -exec python3 scripts/check_lines.py {} +

@@ -1,0 +1,40 @@
+# https://github.com/wesley-a-leung/Resources/blob/master/Scripts/CheckLines.py
+# Thanks Wesley
+import argparse
+import sys
+
+parser = argparse.ArgumentParser(
+	description="Script to check that every line ends in \\n and not \\r\\n, "
+				"does not start with four spaces (use \\t instead), "
+)
+parser.add_argument("filenames", metavar="file", type=str, nargs="+")
+filenames = parser.parse_args().filenames
+
+good = 0
+bad = 0
+for filename in filenames:
+	print()
+	print(filename + ":")
+	with open(filename, "rb") as file:
+		ok = True
+		for curLine, line in enumerate(file, 1):
+			if not line.endswith(b"\n"):
+				print(f"line {curLine} does not end in \\n")
+				ok = False
+			if line.endswith(b"\r\n"):
+				print(f"line {curLine} ends in \\r\\n")
+				ok = False
+			if line.startswith(b"    "):
+				print(f"line {curLine} starts with four spaces")
+				ok = False
+		if ok:
+			print("All lines good")
+			good += 1
+		else:
+			bad += 1
+
+print()
+print(len(filenames), "file(s) checked")
+print(good, "good")
+print(bad, "with errors")
+sys.exit(bad != 0)

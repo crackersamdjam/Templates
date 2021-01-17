@@ -1,4 +1,4 @@
-// https://dmoj.ca/problem/acc1p1
+// test this on a problem later
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;
@@ -13,8 +13,9 @@ mt19937_64 g(25);
 
 struct node{
 	unsigned long long pr = g();
-	int val = 0, sz = 0, max = 0, lv = 0, rv = 0, flip = 0;
-	int lc = 0, rc = 0;
+	int val = 0, sz = 0, max = 0, lv = 0, rv = 0;
+	bool flip = 0;
+	int lc = 0, rc = 0, p = 0;
 } T[MM];
 
 void push(int x){
@@ -45,17 +46,21 @@ void pull(int x){
 	T[x].max = max({T[x].val, T[x].lv, T[x].rv, T[x].val*(T[l].rv + 1 + T[r].lv), T[l].max, T[r].max});
 }
 
+// ls gets <= k (inclusive)
 void split(int x, int k, int &ls, int &rs, int add){
+	T[x].p = 0;
 	push(x);
 	int cur = add + T[l].sz; //current key
 	if(!x) ls = rs = 0;
 	else if(k <= cur){
 		split(l, k, ls, l, add);
 		rs = x;
+		T[l].p = x;
 	}
 	else{
 		split(r, k, r, rs, add+1+T[l].sz);
 		ls = x;
+		T[r].p = x;
 	}
 	pull(x);
 }
@@ -68,10 +73,12 @@ void merge(int &x, int ls, int rs){
 	else if(T[ls].pr > T[rs].pr){
 		merge(T[ls].rc, T[ls].rc, rs);
 		x = ls;
+		T[r].p = x;
 	}
 	else{
 		merge(T[rs].lc, ls, T[rs].lc);
 		x = rs;
+		T[l].p = x;
 	}
 	pull(x);
 }
@@ -80,47 +87,19 @@ void out(int x){
 	if(!x) return;
 	push(x);
 	out(l);
-	cout << T[x].val << ' ';
+	cout<<T[x].val<<' ';
 	out(r);
+}
+
+// index of node T[x] in the bbst
+int ord(int x, int ch = -1){
+	if(!x) return 0;
+	return (l != ch)*(T[l].sz+1) + ord(T[x].p, x);
 }
 
 #undef l
 #undef r
 
-int n, q, rt, mid, rs;
-string s;
-
 int main(){
-	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-	cin>>n>>q>>s;
-	for(int i = 1; i <= n; i++){
-		T[i].val = (s[i-1]=='1');
-		merge(rt, rt, i);
-	}
-	
-	while(q--){
-		int op, a, b;
-		cin>>op>>a>>b;
-		a++;
-		b = a+b-1;
-		if(op == 1){
-			split(rt, b, rt, rs, 0);
-			split(rt, a-1, rt, mid, 0);
-//			cout<<"ls "; out(rt); cout<<'\n'; cout<<"mid "; out(mid); cout<<'\n'; cout<<"rs "; out(rs); cout<<'\n'; cout<<'\n';
-			T[mid].flip ^= 1;
-			merge(mid, mid, rs);
-			merge(rt, rt, mid);
-		}
-		else{
-			split(rt, b, rt, rs, 0);
-			split(rt, a-1, rt, mid, 0);
-			cout << T[mid].max << '\n';
-			
-//			cout<<"ls "; out(rt); cout<<'\n'; cout<<"mid "; out(mid); cout<<'\n'; cout<<"rs "; out(rs); cout<<'\n'; cout<<'\n';
-			
-			merge(mid, mid, rs);
-			merge(rt, rt, mid);
-		}
-//		out(rt); cout<<'\n';
-	}
+	// add this later
 }

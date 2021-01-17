@@ -4,7 +4,7 @@ import argparse
 import sys
 
 parser = argparse.ArgumentParser(
-	description="Script to check that every line ends in \\n and not \\r\\n, "
+	description="Script to check that \\r\\n is not used, "
 				"does not start with four spaces (use \\t instead), "
 )
 parser.add_argument("filenames", metavar="file", type=str, nargs="+")
@@ -18,9 +18,6 @@ for filename in filenames:
 	with open(filename, "rb") as file:
 		ok = True
 		for curLine, line in enumerate(file, 1):
-			if not line.endswith(b"\n"):
-				print(f"line {curLine} does not end in \\n")
-				ok = False
 			if line.endswith(b"\r\n"):
 				print(f"line {curLine} ends in \\r\\n")
 				ok = False

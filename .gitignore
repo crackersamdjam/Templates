@@ -4,8 +4,8 @@ CMakeLists.txt
 !.gitignore
 !.gitattributes
 !.github
-Content/test.cpp
-Content/in
-Content/out
-Content/err
-Content/fullerr
+content/test.cpp
+content/in
+content/out
+content/err
+content/fullerr

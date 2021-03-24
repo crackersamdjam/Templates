@@ -4,19 +4,21 @@
 declare -i total=0
 declare -i pass=0
 declare -i fail=0
+fails="Failed files:"
 for i in $(seq 2 $#); do
 	test=${!i}
-	total+=1
+	total++
 	echo ""
 	echo "$test:"
 	$1 $test
 	retCode=$?
 	if (($retCode == 0)); then
 		echo "Compilation Successful"
-		pass+=1
+		pass++
 	else
 		echo "Compilation Failed ($test)"
-		fail+=1
+		fail++
+		fails+=" $test"
 	fi
 done
 
@@ -26,5 +28,6 @@ echo "$pass successful"
 echo "$fail failed"
 
 if (($fail != 0)); then
+	echo $fails
 	exit 1
 fi

@@ -1,4 +1,4 @@
-[![ubuntu-build](https://github.com/crackersamdjam/Templates/actions/workflows/build.yml/badge.svg)](https://github.com/crackersamdjam/Templates/actions/workflows/build.yml)
+[![build](https://github.com/crackersamdjam/Templates/actions/workflows/build.yml/badge.svg)](https://github.com/crackersamdjam/Templates/actions/workflows/build.yml)
 
 # Templates
 

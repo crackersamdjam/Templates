@@ -42,6 +42,9 @@ struct UnionFindBipartite{
 		}
 		return 0;
 	}
+	void undo(){
+		// to implement later
+	}
 };
 
 // https://dmoj.ca/problem/oly19practice44
@@ -104,8 +107,4 @@ namespace game_of_palindrome{
 		}
 		return 0;
 	}
-}
-
-int main(){
-	game_of_palindrome::main();
 }

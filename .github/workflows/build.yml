@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Check lines
-        run: find "Content/" -type f -exec python3 Scripts/check_lines.py {} +
+        run: find "content/" -type f -exec python3 scripts/check_lines.py {} +
   compile-cpp:
     runs-on: ubuntu-latest
     strategy:
@@ -22,5 +22,5 @@ jobs:
         run: |
           g++-10 --version
       - name: Compile
-        run: find "Content/" \( -iname \*.cpp -o -iname \*.h \) -exec Scripts/compile.sh "g++-10 -std=${{ matrix.cpp-version }} -Wall -Wextra -fsyntax-only" {} +
+        run: find "content/" \( -iname \*.cpp -o -iname \*.h \) -exec scripts/compile.sh "g++-10 -std=${{ matrix.cpp-version }} -Wall -Wextra -fsyntax-only" {} +
         #https://github.community/t/action-showing-permission-denied/134957

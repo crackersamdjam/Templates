@@ -21,3 +21,11 @@ jobs:
       - name: Compile
         run: find "content/" \( -iname \*.cpp -o -iname \*.h \) -exec scripts/compile.sh "g++-10 -std=${{ matrix.cpp-version }} -Wall -Wextra -fsyntax-only" {} +
         #https://github.community/t/action-showing-permission-denied/134957
+  stress-tests-cpp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check version
+        run: g++-10 --version
+      - name: Run stress tests
+        run: find "tests/" -name "*.cpp" -exec scripts/run_cpp_tests.sh "g++-10 -std=c++17 -O2 -Wall -Wextra" {} +

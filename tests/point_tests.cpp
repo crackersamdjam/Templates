@@ -38,5 +38,5 @@ namespace ccc06s3{
 }
 
 int main(){
-	ccc06s3::main();
+//	ccc06s3::main();
 }

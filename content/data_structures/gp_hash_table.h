@@ -1,3 +1,4 @@
+#pragma once
 #include <bits/extc++.h>
 using namespace std;
 

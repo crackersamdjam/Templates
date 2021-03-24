@@ -1,6 +1,6 @@
 # https://github.com/wesley-a-leung/Resources/blob/master/.github/workflows/build.yml
 # Thanks Wesley
-name: ubuntu-build
+name: build
 on: [push, pull_request]
 jobs:
 	check-lines:

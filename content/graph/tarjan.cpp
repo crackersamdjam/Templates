@@ -140,7 +140,7 @@ namespace SCC{
 		}
 		
 		if(dfn[cur] == low[cur]){
-			int u;
+			int u = -1;
 			scc.emplace_back();
 			while(u != cur){
 				u = stk.top(); stk.pop();

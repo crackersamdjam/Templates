@@ -39,24 +39,3 @@ istream &operator >> (istream &stream, pt &p){
 ostream &operator << (ostream &stream, const pt &p){
 	return stream<<p.x<<' '<<p.y;}
 
-// bruce code https://dmoj.ca/src/2941660
-int a,b,c,d,n;
-int main(){
-	cin>>a>>b>>c>>d;
-	pt start={a,b}, finish={c,d};
-	cin>>n;
-	int ans = 0;
-	for(int i = 0; i < n; i++){
-		int corners; cin >> corners;
-		vector<pt> pt(corners);
-		for(int j=0; j<corners; j++){
-			cin>>pt[j];
-		}
-		for(int j = 0; j < corners; j++){
-			if(has_intersect(start, finish, pt[j], pt[(j+1)%corners])){
-				ans++; break;
-			}
-		}
-	}
-	cout<<ans<<'\n';
-}

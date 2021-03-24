@@ -2,19 +2,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-//using T = double; constexpr T eps = 1e-7;
-using T = int; constexpr T eps = 0;
+using T = long double; constexpr T eps = 1e-9;
+//using T = int; constexpr T eps = 0;
 using pt = complex<T>;
 #define x real()
 #define y imag()
 
-bool operator<(const pt &a, const pt &b){
-	return a.x < b.x or (abs(a.x-b.x) <= eps and a.y < b.y-eps);}
-bool operator==(const pt &a, const pt &b){
-	return abs(a.x-b.x) <= eps and abs(a.y-b.y) <= eps;}
-bool operator<=(const pt &a, const pt &b){
-	return a < b or a == b;}
-
+namespace std{
+	bool operator<(const pt &a, const pt &b){
+		return a.x < b.x or (abs(a.x-b.x) <= eps and a.y < b.y-eps);}
+	bool operator==(const pt &a, const pt &b){
+		return !(a < b) and !(b < a); }
+	bool operator<=(const pt &a, const pt &b){
+		return !(b < a);}
+}
 T dot(pt a, pt b){ return a.x*b.x + a.y*b.y;}
 T norm(pt a){ return dot(a, a); } // norm is distance squared
 T cross(pt a, pt b){ return a.x*b.y - a.y*b.x;} // right hand rule: a-index, b-middle, cross-thumb. Result is > 0 if ccw, < 0 if cw, 0 if collinear.

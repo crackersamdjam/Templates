@@ -7,4 +7,4 @@ Algorithm and data structure templates for competitive programming.
 - Shell scripts run in Bash
 
 Todo:
-- get everything to compile
+- get everything to compile in C++17 and C++20 (other versions don't matter)

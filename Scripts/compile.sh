@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # first command line argument is the compile command, following arguments are
 # the files to compile
-numArgs=$#
-total=0
-pass=0
-fail=0
-for i in $(seq 2 $numArgs); do
+declare -i total=0
+declare -i pass=0
+declare -i fail=0
+for i in $(seq 2 $#); do
 	test=${!i}
 	total+=1
 	echo ""

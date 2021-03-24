@@ -5,8 +5,8 @@ using namespace std;
 template<class T> struct sparse_table{
 	int n; vector<vector<T>> sp;
 	T query(int l, int r){
-		int k = __lg(b-a+1);
-		print(max(sp[k][a], sp[k][b-(1<<k)+1]));
+		int k = __lg(r-l+1);
+		print(max(sp[k][l], sp[k][r-(1<<k)+1]));
 	}
 	void build(vector<T> v){
 		n = size(v);

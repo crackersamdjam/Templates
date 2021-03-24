@@ -12,9 +12,10 @@ for i in $(seq 2 $#); do
 	$1 $test
 	retCode=$?
 	if (($retCode == 0)); then
-		echo "Compiled Successfully"
+		echo "Compilation Successful"
 		pass+=1
 	else
+		echo "Compilation Failed ($test)"
 		fail+=1
 	fi
 done

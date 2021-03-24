@@ -17,7 +17,7 @@ namespace std{
 		return !(b < a);}
 }
 T dot(pt a, pt b){ return a.x*b.x + a.y*b.y;}
-T norm(pt a){ return dot(a, a); } // norm is distance squared
+T norm(pt a){ return dot(a, a); } // norm is distance squared. Don't use std::norm because of inaccuracy
 T cross(pt a, pt b){ return a.x*b.y - a.y*b.x;} // right hand rule: a-index, b-middle, cross-thumb. Result is > 0 if ccw, < 0 if cw, 0 if collinear.
 T ccw(pt origin, pt a, pt b){ return cross(a-origin, b-origin);}
 

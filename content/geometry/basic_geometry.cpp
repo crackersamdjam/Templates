@@ -2,82 +2,74 @@
 #define all(x) (x).begin(), (x).end()
 
 using namespace std;
+using T = double;
 
-template<typename T> struct pt{
-	T x, y;
-	pt() {}
-	pt(T _x, T _y): x(_x), y(_y) {}
-	pt& operator += (const pt &o){
-		x += o.x, y += o.y;
-		return *this;
-	}
-	pt& operator -= (const pt &o){
-		x -= o.x, y -= o.y;
-		return *this;
-	}
-	pt operator *= (T o){
-		x *= o, y *= o;
-		return *this;
-	}
-	pt operator /= (T o){
-		x /= o, y /= o;
-		return *this;
-	}
-	pt operator + (const pt &o) const{
-		return pt(*this) += o;
-	}
-	pt operator - (const pt &o) const{
-		return pt(*this) -= o;
-	}
-	pt operator * (const pt &o) const{
-		return pt(*this) *= o;
-	}
-	pt operator / (const pt &o) const{
-		return pt(*this) /= o;
-	}
+constexpr const T EPS = 1e-9;
+bool lt(T a, T b) { return a + EPS < b; }
+bool le(T a, T b) { return !lt(b, a); }
+bool gt(T a, T b) { return lt(b, a); }
+bool ge(T a, T b) { return !lt(a, b); }
+bool eq(T a, T b) { return !lt(a, b) && !lt(b, a); }
+bool ne(T a, T b) { return lt(a, b) || lt(b, a); }
+int sgn(T a) { return lt(a, 0) ? -1 : lt(0, a) ? 1 : 0; }
+struct eps_lt { bool operator () (T a, T b) const { return lt(a, b); } };
+struct eps_le { bool operator () (T a, T b) const { return !lt(b, a); } };
+struct eps_gt { bool operator () (T a, T b) const { return lt(b, a); } };
+struct eps_ge { bool operator () (T a, T b) const { return !lt(a, b); } };
+struct eps_eq {
+	bool operator () (T a, T b) const { return !lt(a, b) && !lt(b, a); }
+};
+struct eps_ne {
+	bool operator () (T a, T b) const { return lt(a, b) || lt(b, a); }
 };
 
-int main(){
+#define x real()
+#define y imag()
+#define ref const pt &
+using pt = complex<T>;
 
-	pt a = {1, 2};
-//	pt b = a*5;
-
+istream &operator >> (istream &stream, pt &p) {
+	T X, Y; stream >> X >> Y; p = pt(X, Y); return stream;
 }
-
-namespace old{
-	const int MM = 55;
-	using ld = double;
-	
-	int n;
-	double x[MM], y[MM], ans = 1e16;
-	
-	
-	double dis(double x1, double y1, double x2, double y2){
-		return sqrtl((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-	}
-	void check(double cx, double cy){
-		double mx = 0;
-		for(int i=0; i<n; i++)
-			mx = max(mx, dis(x[i], y[i], cx, cy));
-		ans = min(ans, mx);
-		//cout << cx << ' ' << cy << ' ' << mx << '\n';
-	}
-	//centroid of three points
-	void cent(int a, int b, int c){
-		ld a1 = x[b]-x[a], b1 = y[b]-y[a], c1 = (a1*a1 + b1*b1)/2;
-		ld a2 = x[c]-x[a], b2 = y[c]-y[a], c2 = (a2*a2 + b2*b2)/2;
-		ld d = a1*b2 - a2*b1;
-		//watch out for infinate coordinates
-		if(d != 0)
-			check(x[a] + (c1*b2 - c2*b1)/d, y[a] + (a1*c2 - a2*c1)/d);
-	}
-	
-	//two centers of circle where two points are on it if radius is 2.5
-	void solve(int a, int b){
-		double mx = (x[a] + x[b])/2, my = (y[a] + y[b])/2, m = 0.0;
-		if(x[a] != x[b]) m = -(x[a] - x[b])/(y[a]-y[b]);
-		double d = sqrt(6.25 - dis(x[a], y[a], mx, my));
-		double dx = d / sqrt(1+m*m), dy = d*m/sqrt(1+m*m);
-		check(mx-dx, my-dy); check(mx+dx, my+dy);
-	}
+ostream &operator << (ostream &stream, ref p) {
+	return stream << p.x << ' ' << p.y;
 }
+bool operator < (ref a, ref b) {
+	return eq(a.x, b.x) ? lt(a.y, b.y) : lt(a.x, b.x);
+}
+bool operator <= (ref a, ref b) { return !(b < a); }
+bool operator > (ref a, ref b) { return b < a; }
+bool operator >= (ref a, ref b) { return !(a < b); }
+bool operator == (ref a, ref b) { return !(a < b) && !(b < a); }
+bool operator != (ref a, ref b) { return a < b || b < a; }
+struct pt_lt { bool operator () (ref a, ref b) const { return a < b; } };
+struct pt_le { bool operator () (ref a, ref b) const { return !(b < a); } };
+struct pt_gt { bool operator () (ref a, ref b) const { return b < a; } };
+struct pt_ge { bool operator () (ref a, ref b) const { return !(a < b); } };
+struct pt_eq {
+	bool operator () (ref a, ref b) const { return !(a < b) && !(b < a); }
+};
+struct pt_ne {
+	bool operator () (ref a, ref b) const { return a < b || b < a; }
+};
+// abs gets polar distance, arg gets polar angle
+T dot(ref a, ref b) { return a.x * b.x + a.y * b.y; }
+T cross(ref a, ref b) { return a.x * b.y - a.y * b.x; }
+T norm(ref a) { return dot(a, a); }
+T distSq(ref a, ref b) { return norm(b - a); }
+T dist(ref a, ref b) { return abs(b - a); }
+T ang(ref a, ref b) { return arg(b - a); }
+// sign of ang, area2, ccw: 1 if counterclockwise, 0 if collinear,
+//   -1 if clockwise
+T ang(ref a, ref b, ref c) {
+	return remainder(ang(b, a) - ang(b, c), 2 * acos(T(-1)));
+}
+// twice the signed area of triangle a, b, c
+T area2(ref a, ref b, ref c) { return cross(b - a, c - a); }
+int ccw(ref a, ref b, ref c) { return sgn(area2(a, b, c)); }
+// a rotated theta radians around p
+pt rot(ref a, ref p, T theta) {
+	return (a - p) * pt(polar(T(1), theta)) + p;
+}
+// rotated 90 degrees ccw
+pt perp(ref a) { return pt(-a.y, a.x); }

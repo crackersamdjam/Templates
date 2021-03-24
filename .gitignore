@@ -6,8 +6,4 @@ CMakeLists.txt
 !.github
 
 # For quick testing
-content/test.cpp
-content/in
-content/out
-content/err
-content/fullerr
+testing/

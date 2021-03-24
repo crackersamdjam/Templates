@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # first command line argument is the compile command, following arguments are
 # the files to compile
-set -eu
 numArgs=$#
 total=0
 pass=0

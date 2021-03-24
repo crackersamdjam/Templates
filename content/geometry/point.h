@@ -2,15 +2,18 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-using T = long double; constexpr T eps = 1e-9;
-//using T = int; constexpr T eps = 0;
+//using T = long double; constexpr T eps = 1e-9;
+using T = long long; constexpr T eps = 0;
+// all numbers that can be represented by long long can also be
+// accurately represented by long double, it's just slower
+
 using pt = complex<T>;
 #define x real()
 #define y imag()
 
 namespace std{
 	bool operator<(const pt &a, const pt &b){
-		return a.x < b.x or (abs(a.x-b.x) <= eps and a.y < b.y-eps);}
+		return a.x < b.x or (a.x-eps <= b.x and a.y < b.y-eps);}
 	bool operator==(const pt &a, const pt &b){
 		return !(a < b) and !(b < a); }
 	bool operator<=(const pt &a, const pt &b){
@@ -26,6 +29,8 @@ pt intersect(pt a1, pt a2, pt b1, pt b2){
 	pt d1 = a2-a1, d2 = b2-b1;
 	return a1 + cross(b1-a1, d2)/cross(d1, d2) * d1;
 }
+
+// make this look nicer (and easier to code up)
 bool has_intersect(pt a1, pt a2, pt b1, pt b2){
 	if(max(a1.x, a2.x) >= min(b1.x, b2.x) && max(b1.x, b2.x) >= min(a1.x, a2.x) &&
 		max(a1.y, a2.y) >= min(b1.y, b2.y) && max(b1.y, b2.y) >= min(a1.y, a2.y)

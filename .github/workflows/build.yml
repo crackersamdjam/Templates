@@ -20,4 +20,4 @@ jobs:
         run: |
           g++-10 --version
       - name: Compile
-        run: find "Content/" -name "*.[cpp,h]" -exec Scripts/Compile.sh "g++-10 -std=${{ matrix.cpp-version }} -Wall -Wextra -fsyntax-only" {} +
+        run: find "Content/" \( -iname \*.cpp -o -iname \*.h \) -exec Scripts/Compile.sh "g++-10 -std=${{ matrix.cpp-version }} -Wall -Wextra -fsyntax-only" {} +

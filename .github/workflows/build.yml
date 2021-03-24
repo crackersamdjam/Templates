@@ -1,25 +1,25 @@
 # https://github.com/wesley-a-leung/Resources/blob/master/.github/workflows/build.yml
 # Thanks Wesley
-name: build
+name: ubuntu-build
 on: [push, pull_request]
 jobs:
-  check-lines:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Check lines
-        run: find "content/" -type f -exec python3 scripts/check_lines.py {} +
-  compile-cpp:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      #https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstrategyfail-fast
-      matrix:
-        cpp-version: [c++17, c++20]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Check version
-        run: g++-10 --version
-      - name: Compile
-        run: find "content/" \( -iname \*.cpp -o -iname \*.h \) -exec scripts/compile.sh "g++-10 -std=${{ matrix.cpp-version }} -Wall -Wextra -fsyntax-only" {} +
-        #https://github.community/t/action-showing-permission-denied/134957
+	check-lines:
+		runs-on: ubuntu-latest
+		steps:
+			- uses: actions/checkout@v2
+			- name: Check lines
+				run: find "content/" -type f -exec python3 scripts/check_lines.py {} +
+	compile-cpp:
+		runs-on: ubuntu-latest
+		strategy:
+			fail-fast: false
+			#https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstrategyfail-fast
+			matrix:
+				cpp-version: [c++17, c++20]
+		steps:
+			- uses: actions/checkout@v2
+			- name: Check version
+				run: g++-10 --version
+			- name: Compile
+				run: find "content/" \( -iname \*.cpp -o -iname \*.h \) -exec scripts/compile.sh "g++-10 -std=${{ matrix.cpp-version }} -Wall -Wextra -fsyntax-only" {} +
+				#https://github.community/t/action-showing-permission-denied/134957

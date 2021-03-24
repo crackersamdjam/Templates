@@ -7,17 +7,17 @@ declare -i fail=0
 fails="Failed files:"
 for i in $(seq 2 $#); do
 	test=${!i}
-	total++
+	total+=1
 	echo ""
 	echo "$test:"
 	$1 $test
 	retCode=$?
 	if (($retCode == 0)); then
 		echo "Compilation Successful"
-		pass++
+		pass+=1
 	else
 		echo "Compilation Failed ($test)"
-		fail++
+		fail+=1
 		fails+=" $test"
 	fi
 done

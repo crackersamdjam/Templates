@@ -9,3 +9,5 @@ Algorithm and data structure templates for competitive programming.
 - Shell scripts run in Bash
 - Fuzz tests test small cases (could be random) for correctness
 - Stress tests test large random cases for performance
+
+Thank you Wesley for letting me ~~copy~~ take inspiration from [your repository](https://github.com/wesley-a-leung/Resources).

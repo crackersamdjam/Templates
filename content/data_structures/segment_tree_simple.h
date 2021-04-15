@@ -1,14 +1,8 @@
-#pragma once
-#include <bits/stdc++.h>
-
-using namespace std;
-
-template<class T, class L> struct Segtree{
+struct Segtree{
 	#define lc rt<<1
 	#define rc rt<<1|1
 	#define nm ((nl+nr)/2)
-	#define dpm LS, RS, 1
-	#define npm int nl, int nr, int rt
+	#define npm int nl = 0, int nr = n, int rt = 1
 	#define lpm nl, nm, lc
 	#define rpm nm+1, nr, rc
 	
@@ -20,10 +14,9 @@ template<class T, class L> struct Segtree{
 			//val += v;
 			lp += v;
 		}
-	};
-	vector<node> tree; int LS, RS;
-	const T DEF = 0; const L DEFL = 0;
+	} tree[MM*4];
 	
+	const T DEF = 0; const L DEFL = 0;
 	
 	T merge(T va, T vb){
 		return va+vb;
@@ -47,13 +40,6 @@ template<class T, class L> struct Segtree{
 		build(lpm); build(rpm);
 	}
 	
-	void init(int l, int r){
-		tree.resize((r-l+1)*4+5);
-		LS = l, RS = r;
-		build(dpm);
-	}
-	
-	void update(int l, int r, L x){ update(l, r, x, dpm); }
 	void update(int l, int r, L x, npm){
 		if(r < nl or nr < l) return;
 		if(l <= nl and nr <= r){
@@ -65,7 +51,6 @@ template<class T, class L> struct Segtree{
 		pull(rt);
 	}
 	
-	void point_update(int i, L x){ point_update(i, x, dpm); }
 	void point_update(int i, L x, npm){
 		if(nl == nr){
 			tree[rt].apply(x);
@@ -76,7 +61,6 @@ template<class T, class L> struct Segtree{
 		pull(rt);
 	}
 	
-	T query(int l, int r){ return query(l, r, dpm); }
 	T query(int l, int r, npm){
 		if(r < nl or nr < l) return DEF;
 		if(l <= nl and nr <= r)
@@ -86,21 +70,16 @@ template<class T, class L> struct Segtree{
 	}
 	
 	// upper_bound (first point of failure)
-	T sub(T a, T b){
-		return a-b;
-	}
-	int kth(int k){ return kth(k, dpm); }
 	int kth(int k, npm){
 		if(nl == nr)
 			return nl;
 		push(rt, nl, nr);
-		return k < tree[lc].val ? kth(k, lpm) : kth(sub(k, tree[lc].val), rpm);
+		return k < tree[lc].val ? kth(k, lpm) : kth(k-tree[lc].val, rpm);
 	}
-	
+
 	#undef lc
 	#undef rc
 	#undef nm
-	#undef dpm
 	#undef npm
 	#undef lpm
 	#undef rpm

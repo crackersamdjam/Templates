@@ -1,3 +1,9 @@
+using ll = long long;
+using T = ll;
+using L = ll;
+constexpr int MM = 5e5+5;
+extern int n;
+
 struct Segtree{
 	#define lc rt<<1
 	#define rc rt<<1|1

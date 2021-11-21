@@ -16,6 +16,7 @@ template<class T> T divmod(T _a, T _b, T _mod){return _a*fpow(_b, _mod-2, _mod)%
 
 // https://github.com/wesley-a-leung/Resources/blob/master/Content/C++/math/Primes.h#L94
 // checks whether N is prime in O(iterations * complexity of fpow)
+// if N is small, we can get away with trying fewer 'a's https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test#Testing_against_small_sets_of_bases
 template<class T> bool miller_rabin(T N, int iterations = 7){
 	if(N < 2 or N%6%4 != 1)
 		return (N|1) == 3;
